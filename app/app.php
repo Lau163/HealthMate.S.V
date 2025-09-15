@@ -21,7 +21,7 @@ class App
         $this->url = explode("/", $this->url);
         
         // Manejar rutas públicas (que no requieren autenticación)
-        $rutasPublicas = ['auth', 'login', 'recuperar', 'registro', 'error'];
+        $rutasPublicas = [ 'index','auth', 'login', 'recuperar', 'registro', 'error', ];
         
         // Verificar si la ruta actual es pública
         $rutaActual = $this->url[0] ?? 'index';
@@ -31,7 +31,7 @@ class App
         if (!$esRutaPublica && !isset($_SESSION['usuario_id'])) {
             $_SESSION['redirect_url'] = $_SERVER['REQUEST_URI'];
             $_SESSION['error'] = 'Por favor inicia sesión para acceder a esta página.';
-            header('Location: /login');
+            header('Location: index ');
             exit;
         }
         
