@@ -31,7 +31,7 @@ class App
         if (!$esRutaPublica && !isset($_SESSION['usuario_id'])) {
             $_SESSION['redirect_url'] = $_SERVER['REQUEST_URI'];
             $_SESSION['error'] = 'Por favor inicia sesión para acceder a esta página.';
-            header('Location: index ');
+            header('Location: index');
             exit;
         }
         
