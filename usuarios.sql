@@ -26,7 +26,16 @@ SET time_zone = "+00:00";
 --
 -- Estructura de tabla para la tabla `usuarios`
 --
-
+CREATE TABLE `usuarios` (
+  `Id_Usuario` int(10) UNSIGNED NOT NULL,
+  `Nombre` varchar(100) NOT NULL,
+  `Edad` varchar(20) NOT NULL,
+  `Sexo` varchar(10) NOT NULL,
+  `Peso` varchar(20) NOT NULL,
+  `Altura` varchar(20) DEFAULT NULL,
+  `Tipo_sangre` varchar(200) DEFAULT NULL,
+  `Alergias` varchar(10) NOT NULL,
+  `Enfermedades` varchar(10) NOT NULL)
 -- Tabla de roles
 CREATE TABLE `roles` (
   `Id_Rol` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
