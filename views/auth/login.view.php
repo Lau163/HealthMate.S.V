@@ -21,7 +21,7 @@ require_once __DIR__ . '/../layouts/header.php';
                         <div class="alert alert-danger"><?php echo htmlspecialchars($error); ?></div>
                     <?php endif; ?>
                     
-                    <form action="/auth/login" method="post" id="loginForm" novalidate>
+                    <form action="/auth/login" method="post" id="loginForm" class="needs-validation" novalidate>
                         <div class="mb-3">
                             <label for="email" class="form-label">Correo Electrónico</label>
                             <div class="input-group">
@@ -49,20 +49,33 @@ require_once __DIR__ . '/../layouts/header.php';
                                     <i class="fas fa-eye"></i>
                                 </button>
                                 <div class="invalid-feedback">
-                                    La contraseña es requerida (mínimo 8 caracteres).
-                                </div>
+                        </div>
+                        
+                        <!-- Remember Me & Forgot Password -->
+                        <div class="flex items-center justify-between mb-6">
+                            <div class="flex items-center">
+                                <input id="remember_me" name="remember_me" type="checkbox" 
+                                       class="h-4 w-4 text-teal-600 focus:ring-teal-500 border-gray-300 rounded"
+                                       <?php echo (isset($_POST['remember_me']) && $_POST['remember_me'] === 'on') ? 'checked' : ''; ?>>
+                                <label for="remember_me" class="ml-2 block text-sm text-gray-700">
+                                    Recordarme
+                                </label>
+                            </div>
+                            
+                            <div class="text-sm">
+                                <a href="/auth/recuperar" class="font-medium text-teal-600 hover:text-teal-500">
+                                    ¿Olvidaste tu contraseña?
+                                </a>
                             </div>
                         </div>
                         
-                        <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-sign-in-alt me-2"></i>Iniciar Sesión
-                            </button>
-                        </div>
+                        <!-- CSRF Token -->
+                        <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token'] ?? ''; ?>">
                         
-                        <div class="text-center mt-3">
-                            <a href="/auth/recuperar" class="text-decoration-none">¿Olvidaste tu contraseña?</a>
-                        </div>
+                        <!-- Submit Button -->
+                        <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500">
+                            Iniciar sesión
+                        </button>
                     </form>
                 </div>
                 <div class="card-footer text-center">
@@ -115,6 +128,12 @@ document.getElementById('togglePassword').addEventListener('click', function() {
         
         form.classList.add('was-validated')
     }, false)
+    
+    // Inicializar tooltips de Bootstrap
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
 })()
 </script>
 

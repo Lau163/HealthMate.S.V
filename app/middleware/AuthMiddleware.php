@@ -32,4 +32,17 @@ class AuthMiddleware {
             $authController->redirigirSegunRol();
         }
     }
+    class AuthMiddleware {
+        public function handle() {
+            $rutasPublicas = ['auth/login', 'auth/recuperar', 'auth/registro'];
+            $rutaActual = trim($_SERVER['REQUEST_URI'], '/');
+            
+            // Si la ruta no es pública y el usuario no está autenticado
+            if (!in_array($rutaActual, $rutasPublicas) && !isset($_SESSION['usuario_id'])) {
+                $_SESSION['redirect_url'] = $_SERVER['REQUEST_URI'];
+                header('Location: /auth/login');
+                exit;
+            }
+        }
+    }
 }
