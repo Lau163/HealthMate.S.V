@@ -1,9 +1,9 @@
 <?php
 
 /**
- *
+ * Modelo para el módulo de enfermería
  */
-class EnfemerxModel extends ModelBase
+class EnfermerxModel extends ModelBase
 {
 
     public function __construct()
