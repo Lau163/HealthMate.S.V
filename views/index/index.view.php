@@ -93,7 +93,7 @@
 
     <!-- Login Form -->
 
-   <form id="login-tab" class="space-y-6" method="POST" action="auth/autenticar">
+   <form id="login-tab" class="space-y-6" method="POST" action="<?= BASE_URL ?>auth/login">
     <!-- Email -->
     <div class="relative mb-6">
         <input type="email" id="email" name="email" placeholder=" " class="w-full pl-4 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-200 focus:border-teal-500" required>
@@ -113,7 +113,19 @@
 </form>
 
   <!-- Register Form -->
-<form id="register-tab" class="space-y-6 hidden" method="POST" action="auth/register">
+<form id="register-tab" class="space-y-6 hidden" method="POST" action="<?= BASE_URL ?>auth/register" onsubmit="return validateRegisterForm()">
+    <?php if (isset($_SESSION['error'])): ?>
+    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+        <span class="block sm:inline"><?= htmlspecialchars($_SESSION['error']) ?></span>
+        <?php unset($_SESSION['error']); ?>
+    </div>
+    <?php endif; ?>
+    <?php if (isset($_SESSION['success'])): ?>
+    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
+        <span class="block sm:inline"><?= htmlspecialchars($_SESSION['success']) ?></span>
+        <?php unset($_SESSION['success']); ?>
+    </div>
+    <?php endif; ?>
     <!-- Nombre -->
   <div class="relative mb-6">
     <input type="text" id="nombre" name="nombre" placeholder=" " class="input-floating w-full pl-4 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-200 focus:border-teal-500" required>
@@ -156,8 +168,8 @@
     </div>
     <!-- Tipo de sangre -->
     <div class="relative">
-        <input type="text" id="tipo_sangre" name="" placeholder=" " class="input-floating w-full pl-4 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-200 focus:border-teal-500">
-        <label for="" class="input-floating-label">Tipo de sangre</label>
+        <input type="text" id="tipo_sangre" name="tipo_sangre" placeholder=" " class="input-floating w-full pl-4 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-200 focus:border-teal-500">
+        <label for="tipo_sangre" class="input-floating-label">Tipo de sangre</label>
     </div>
     <!-- Alergias -->
     <div class="relative">
@@ -176,20 +188,114 @@
 </div>
 
 <script>
-    // Tabs functionality
+    // Función para cambiar de pestaña
+    function switchTab(tabName) {
+        // Actualizar botones
+        document.querySelectorAll('.tab-btn').forEach(b => {
+            b.classList.remove('text-teal-700', 'border-teal-700');
+            b.classList.add('text-gray-500', 'border-transparent');
+            if (b.dataset.tab === tabName) {
+                b.classList.add('text-teal-700', 'border-teal-700');
+                b.classList.remove('text-gray-500', 'border-transparent');
+            }
+        });
+        
+        // Mostrar/ocultar formularios
+        document.getElementById('login-tab').classList.toggle('hidden', tabName !== 'login');
+        document.getElementById('register-tab').classList.toggle('hidden', tabName !== 'register');
+    }
+    
+    // Inicializar tabs
     document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.addEventListener('click', function() {
-            document.querySelectorAll('.tab-btn').forEach(b => {
-                b.classList.remove('text-teal-700', 'border-teal-700');
-                b.classList.add('text-gray-500', 'border-transparent');
-            });
-            this.classList.add('text-teal-700', 'border-teal-700');
-            this.classList.remove('text-gray-500', 'border-transparent');
-            // Mostrar/ocultar formularios
-            document.getElementById('login-tab').classList.toggle('hidden', this.dataset.tab !== 'login');
-            document.getElementById('register-tab').classList.toggle('hidden', this.dataset.tab !== 'register');
+            const tabName = this.dataset.tab;
+            switchTab(tabName);
+            
+            // Limpiar mensajes de error al cambiar de pestaña
+            const errorMessages = document.querySelectorAll('.alert-danger, .alert-success');
+            errorMessages.forEach(msg => msg.remove());
         });
     });
+    
+    // Establecer pestaña activa desde la sesión o por defecto 'login'
+    const activeTab = '<?php echo $_SESSION['active_tab'] ?? 'login'; ?>';
+    switchTab(activeTab);
+    
+    // Rellenar formulario con datos guardados en caso de error
+    <?php if (isset($_SESSION['form_data'])): ?>
+    const formData = <?php echo json_encode($_SESSION['form_data']); ?>;
+    Object.keys(formData).forEach(key => {
+        const input = document.querySelector(`[name="${key}"]`);
+        if (input) {
+            input.value = formData[key];
+            // Disparar evento para actualizar etiquetas flotantes
+            const event = new Event('input', { bubbles: true });
+            input.dispatchEvent(event);
+        }
+    });
+    <?php 
+    // Limpiar datos del formulario después de usarlos
+    unset($_SESSION['form_data']);
+    endif; 
+    ?>
+
+    // Validación del formulario de registro
+    function validateRegisterForm() {
+        const form = document.getElementById('register-tab');
+        const password = document.getElementById('password_reg').value;
+        const email = document.getElementById('email_reg').value;
+        const edad = document.getElementById('edad').value;
+        
+        // Validar contraseña
+        if (password.length < 8) {
+            showError('La contraseña debe tener al menos 8 caracteres');
+            return false;
+        }
+        
+        // Validar email
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            showError('Por favor ingresa un correo electrónico válido');
+            return false;
+        }
+        
+        // Validar edad
+        const edadNum = parseInt(edad);
+        if (isNaN(edadNum) || edadNum < 1 || edadNum > 120) {
+            showError('La edad debe estar entre 1 y 120 años');
+            return false;
+        }
+        
+        return true;
+    }
+    
+    function showError(message) {
+        // Eliminar mensajes de error existentes
+        const existingError = document.querySelector('.register-error');
+        if (existingError) {
+            existingError.remove();
+        }
+        
+        // Crear y mostrar el nuevo mensaje de error
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4 register-error';
+        errorDiv.role = 'alert';
+        errorDiv.innerHTML = `
+            <span class="block sm:inline">${message}</span>
+            <span class="absolute top-0 bottom-0 right-0 px-4 py-3" onclick="this.parentElement.remove()">
+                <svg class="fill-current h-6 w-6 text-red-500" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                    <title>Cerrar</title>
+                    <path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z"/>
+                </svg>
+            </span>
+        `;
+        
+        // Insertar el mensaje de error al principio del formulario
+        const form = document.getElementById('register-tab');
+        form.insertBefore(errorDiv, form.firstChild);
+        
+        // Desplazarse al mensaje de error
+        errorDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
 </script>
     </div>
 

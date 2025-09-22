@@ -28,11 +28,43 @@ class UsuarioModel extends ModelBase {
      * Verifica las credenciales del usuario
      */
     public function verificarCredenciales($email, $password) {
+        // Buscar el usuario por email
         $usuario = $this->buscarPorEmail($email);
-        if ($usuario && password_verify($password, $usuario['Password'])) {
-            return $usuario;
+        
+        // Si no se encuentra el usuario, retornar falso
+        if (!$usuario) {
+            error_log("Usuario no encontrado para el email: " . $email);
+            return false;
         }
-        return false;
+        
+        // Verificar si la contraseña coincide
+        $passwordMatch = password_verify($password, $usuario['Password']);
+        
+        // Depuración
+        error_log("Verificando contraseña para: " . $email);
+        error_log("Hash almacenado: " . $usuario['Password']);
+        error_log("¿La contraseña coincide? " . ($passwordMatch ? 'Sí' : 'No'));
+        
+        // Si la contraseña no coincide, verificar si es la contraseña sin hashear (solo para depuración)
+        if (!$passwordMatch && $password === $usuario['Password']) {
+            error_log("ADVERTENCIA: La contraseña no está hasheada en la base de datos");
+            // Hashear la contraseña y actualizarla en la base de datos
+            $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+            $this->actualizarPassword($usuario['Id_Usuario'], $hashedPassword);
+            $usuario['Password'] = $hashedPassword;
+            $passwordMatch = true;
+        }
+        
+        return $passwordMatch ? $usuario : false;
+    }
+    
+    /**
+     * Actualiza la contraseña de un usuario
+     */
+    private function actualizarPassword($usuarioId, $nuevoHash) {
+        $query = "UPDATE {$this->table} SET Password = :password WHERE Id_Usuario = :id";
+        $stmt = $this->con->pdo->prepare($query);
+        return $stmt->execute([':password' => $nuevoHash, ':id' => $usuarioId]);
     }
 
     /**
@@ -95,5 +127,15 @@ class UsuarioModel extends ModelBase {
         
         // Regenerar ID de sesión para prevenir fijación de sesión
         session_regenerate_id(true);
+    }
+    
+    /**
+     * Obtiene todos los roles disponibles en el sistema
+     */
+    public function obtenerRolesDisponibles() {
+        $query = "SELECT * FROM roles ORDER BY Id_Rol ASC";
+        $stmt = $this->con->pdo->prepare($query);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }
