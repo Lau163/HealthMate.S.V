@@ -3,71 +3,64 @@ session_start();
 require_once "controllers/error.controller.php";
 class App
 {
-    
-    // Rutas de autenticación
-    private $rutas = [
-        'auth/login' => ['auth', 'mostrarLogin'],
-        'auth/logout' => ['auth', 'logout'],
-        'auth/autenticar' => ['auth', 'login'],
-        // ... otras rutas
-    ];
+    private $alertLogin;
+    private $url;
+    public function __construct()
+    {
+        // Obtener y normalizar la URL
+        $this->url = isset($_GET['url']) ? $_GET['url'] : null;
+        $this->url = rtrim($this->url ?? '', "/");
+        $this->url = filter_var($this->url, FILTER_SANITIZE_URL);
+        $this->url = explode("/", $this->url);
 
-    public function __construct() {
-        // Iniciar sesión si no está iniciada
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
+        // Cuando se ingresa sin definir el controlador
+        if (empty($this->url[0])) {
+            $archivoController = "controllers/index.controller.php";
+            require_once $archivoController;
+            $controller = new Index();
+            $controller->loadModel("index");
+            $controller->render();
+            return false;
         }
-
-        // Configurar token CSRF si no existe
-        if (empty($_SESSION['csrf_token'])) {
-            $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
-        }
-
-        // Obtener la URL solicitada
-        $url = isset($_GET['url']) ? rtrim($_GET['url'], '/') : 'inicio';
-        $url = filter_var($url, FILTER_SANITIZE_URL);
-        $url = explode('/', $url);
-
-        // Manejar la ruta
-        $this->manejarRuta($url);
+        $this->general($this->url);
     }
+    function general($url_general)
+    {
+        $archivoController = "controllers/" . $url_general[0] . ".controller.php";
 
-    private function manejarRuta($url) {
-        // Convertir la URL a un string para buscar en las rutas
-        $rutaSolicitada = implode('/', $url);
-        
-        // Verificar si la ruta existe en el array de rutas
-        if (array_key_exists($rutaSolicitada, $this->rutas)) {
-            $controlador = $this->rutas[$rutaSolicitada][0];
-            $metodo = $this->rutas[$rutaSolicitada][1];
-            
-            // Cargar el controlador
-            $archivoControlador = 'controllers/' . $controlador . '.controller.php';
-            
-            if (file_exists($archivoControlador)) {
-                require_once $archivoControlador;
-                
-                // Crear instancia del controlador
-                $claseControlador = ucfirst($controlador) . 'Controller';
-                $controlador = new $claseControlador();
-                
-                // Llamar al método correspondiente
-                if (method_exists($controlador, $metodo)) {
-                    $controlador->$metodo();
-                    return;
+        if (file_exists($archivoController)) {
+            require_once $archivoController;
+            // Inicializa el controlador
+            $controller = new $url_general[0];
+            $controller->loadModel($url_general[0]);
+            // Número de elementos del arreglo URL
+            $nparam = sizeof($url_general);
+            if ($nparam > 1) {
+                if ($nparam > 2) {
+                    $param = [];
+                    for ($i = 2; $i < $nparam; $i++) {
+                        array_push($param, $url_general[$i]);
+                    }
+                    if (method_exists($controller, $url_general[1])) {
+                        $controller->{$url_general[1]}($param);
+                    } else {
+                        $controller = new Errores();
+                        $controller->index('404');
+                    }
+                } else {
+                    if (method_exists($controller, $url_general[1])) {
+                        $controller->{$url_general[1]}(); //Carga el metodo
+                    } else {
+                        $controller = new Errores();
+                        $controller->index('404');
+                    }
                 }
+            } else {
+                $controller->render();
             }
+        } else {
+            $controller = new Errores();
+            $controller->index('404');
         }
-        
-        // Si no se encontró la ruta, mostrar error 404
-        $this->mostrarError(404);
-    }
-    
-    private function mostrarError($codigo) {
-        http_response_code($codigo);
-        require_once 'controllers/error.controller.php';
-        $error = new ErrorController();
-        $error->index($codigo);
-        exit;
     }
 }

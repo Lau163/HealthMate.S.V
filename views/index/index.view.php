@@ -87,17 +87,21 @@
             <button class="tab-btn text-gray-500 font-bold py-2 px-4 border-b-2 border-transparent hover:text-teal-700 focus:outline-none" data-tab="register">Registrarse</button>
         </nav>
     </div>
+    <?php if (isset($error)): ?>
+    <div class="alert alert-danger"><?= htmlspecialchars($error) ?></div>
+    <?php endif; ?>
 
     <!-- Login Form -->
-   <form id="login-tab" class="space-y-6">
+
+   <form id="login-tab" class="space-y-6" method="POST" action="auth/autenticar">
     <!-- Email -->
     <div class="relative mb-6">
-        <input type="email" id="email_login" name="email" placeholder=" " class="w-full pl-4 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-200 focus:border-teal-500" required>
+        <input type="email" id="email" name="email" placeholder=" " class="w-full pl-4 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-200 focus:border-teal-500" required>
         <label for="email_login" class="input-floating-label">Correo electrónico</label>
     </div>
     <!-- Password -->
     <div class="relative mb-6">
-        <input type="password" id="password_login" name="password" placeholder=" " class="w-full pl-4 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-200 focus:border-teal-500" required>
+        <input type="password" id="password" name="password" placeholder=" " class="w-full pl-4 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-200 focus:border-teal-500" required>
         <label for="password_login" class="input-floating-label">Contraseña</label>
     </div>
     <button type="submit" class="w-full bg-teal-700 hover:bg-teal-800 text-white font-bold py-3 px-4 rounded-lg btn-login focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-opacity-50 transition duration-200 transform active:scale-95">
@@ -109,7 +113,7 @@
 </form>
 
   <!-- Register Form -->
-<form id="register-tab" class="space-y-6 hidden">
+<form id="register-tab" class="space-y-6 hidden" method="POST" action="auth/register">
     <!-- Nombre -->
   <div class="relative mb-6">
     <input type="text" id="nombre" name="nombre" placeholder=" " class="input-floating w-full pl-4 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-200 focus:border-teal-500" required>

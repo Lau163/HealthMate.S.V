@@ -29,6 +29,13 @@ class ControllerBase{
   function recargar(){
     header('Location:'.constant('URL'));
   }
+
+  // Helper para mantener compatibilidad: permitir $this->render('vista/ruta')
+  function renderView($vista){
+    if ($this->view instanceof ViewBase) {
+      $this->view->render($vista);
+    }
+  }
 }
 
  ?>

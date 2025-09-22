@@ -1,5 +1,5 @@
 <?php
-class Enfemerx extends ControllerBase
+class Enfermerx extends ControllerBase
 {
     function __construct()
     {

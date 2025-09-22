@@ -80,7 +80,7 @@ require_once __DIR__ . '/../layouts/header.php';
                 </div>
                 <div class="card-footer text-center">
                     <p class="mb-0">¿No tienes una cuenta? 
-                        <a href="/auth/registro" class="text-primary">Regístrate aquí</a>
+                        <a href="/auth/register" class="text-primary">Regístrate aquí</a>
                     </p>
                 </div>
             </div>
