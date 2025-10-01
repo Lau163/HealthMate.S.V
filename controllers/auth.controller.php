@@ -14,17 +14,29 @@ class Auth extends ControllerBase {
      * Muestra el formulario de login
      */
     public function mostrarLogin() {
-        // Si ya está autenticado, redirigir a la página principal
+        // Si ya está autenticado, redirigir a la selección de roles
         if (isset($_SESSION['usuario_id'])) {
-            header('Location: ' . BASE_URL);
-            exit;
+            $this->seleccionarRol();
+            return;
         }
         
-        // Si estamos en la ruta /auth, redirigir a la raíz
-        if (strpos($_SERVER['REQUEST_URI'], '/auth') === 0) {
-            header('Location: ' . BASE_URL);
-            exit;
+        // Obtener todos los mensajes flash
+        $flash_messages = getAllFlashMessages();
+        $error = '';
+        
+        // Buscar el primer mensaje de error
+        foreach ($flash_messages as $flash) {
+            if ($flash['type'] === 'error') {
+                $error = $flash['message'];
+                break;
+            }
         }
+        
+        // Pasar el error a la vista
+        $this->view->set('error', $error);
+        
+        // Renderizar la vista de login
+        $this->view->render('auth/login');
     }
 
     // Render por defecto para /auth
@@ -33,12 +45,96 @@ class Auth extends ControllerBase {
     }
     
     /**
+     * Cambia el rol del usuario actual
+     * Elimina solo los datos de sesión relacionados con el rol actual
+     */
+    public function cambiarRol() {
+        // Eliminar solo los datos de sesión relacionados con el rol
+        unset($_SESSION['rol_actual']);
+        unset($_SESSION['modulo_actual']);
+        
+        // Redirigir a la selección de roles
+        $this->seleccionarRol();
+    }
+    
+    /**
+     * Muestra la vista de selección de roles o redirige si solo tiene un rol
+     */
+    public function seleccionarRol() {
+        // Verificar si el usuario está autenticado
+        if (!isset($_SESSION['usuario_id'])) {
+            header('Location: ' . BASE_URL . 'auth');
+            exit;
+        }
+        
+        // Obtener el ID del usuario actual
+        $usuarioId = $_SESSION['usuario_id'];
+        
+        // Obtener los roles del usuario desde el modelo
+        $roles = $this->usuarioModel->obtenerRolesPorUsuario($usuarioId);
+        
+        if (empty($roles)) {
+            // Si el usuario no tiene roles asignados, mostrar un mensaje de error
+            setFlashMessage('error', 'No tienes roles asignados. Por favor, contacta al administrador.');
+            $this->view->render('auth/seleccionar_rol', ['roles' => []]);
+            return;
+        }
+        
+        // Si el usuario solo tiene un rol, redirigir directamente
+        if (count($roles) === 1) {
+            $rol = strtolower($roles[0]['Nombre_Rol']);
+            $this->redirigirSegunRol($rol);
+            return;
+        }
+        
+        // Pasar los roles a la vista
+        $this->view->render('auth/seleccionar_rol', ['roles' => $roles]);
+    }
+    
+    /**
+     * Redirige al usuario según su rol
+     * 
+     * @param string $rol Nombre del rol en minúsculas
+     */
+    private function redirigirSegunRol($rol) {
+        // Mapeo de roles a rutas
+        $rutasPorRol = [
+            'admin' => 'admin/dashboard',
+            'administrador' => 'admin/dashboard',
+            'doctor' => 'doctor',
+            'médico' => 'doctor',
+            'enfermerx' => 'enfermerx',
+            'enfermerx' => 'enfermerx',  // Redirigir a enfermerx para ambos
+            'paciente' => 'paciente',
+            'recepcionista' => 'recepcion'
+        ];
+        
+        // Obtener la ruta base o usar la ruta por defecto
+        $ruta = $rutasPorRol[strtolower($rol)] ?? 'auth/seleccionar-rol';
+        
+        // Redirigir a la ruta correspondiente
+        header('Location: ' . URL . $ruta);
+        exit;
+    }
+    
+    /**
      * Procesa el inicio de sesión
      */
     public function login() {
+        // Asegurarse de que la sesión esté iniciada
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        // Depuración: Verificar si la sesión está activa
+        error_log('Sesión iniciada: ' . (session_status() === PHP_SESSION_ACTIVE ? 'Sí' : 'No'));
+        error_log('Método de solicitud: ' . $_SERVER['REQUEST_METHOD']);
+        error_log('Datos POST: ' . print_r($_POST, true));
+
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            // Evitar loop de redirecciones a un endpoint POST
-            header('Location: ' . BASE_URL . 'auth');
+            // Redirigir al formulario de login si no es una petición POST
+            error_log('Redirigiendo a login - No es una petición POST');
+            header('Location: ' . BASE_URL . 'auth/login');
             exit;
         }
 
@@ -50,31 +146,47 @@ class Auth extends ControllerBase {
                 throw new Exception('Por favor, ingresa tu correo y contraseña');
             }
 
-            // Depuración: Mostrar el correo que se está intentando autenticar
-            error_log("Intento de inicio de sesión para: " . $email);
-
+            // Primero buscamos el usuario por email
             $usuario = $this->usuarioModel->buscarPorEmail($email);
             
-            // Depuración: Verificar si se encontró el usuario
-            if ($usuario) {
-                error_log("Usuario encontrado en la base de datos: " . print_r($usuario, true));
-                // Verificar la contraseña
-                $passwordMatch = password_verify($password, $usuario['Password']);
-                error_log("¿La contraseña coincide? " . ($passwordMatch ? 'Sí' : 'No'));
-                
-                if (!$passwordMatch) {
-                    error_log("Hash de la contraseña almacenada: " . $usuario['Password']);
-                    error_log("Contraseña proporcionada: " . $password);
-                }
-            } else {
-                error_log("No se encontró ningún usuario con el correo: " . $email);
-            }
-
-            $usuario = $this->usuarioModel->verificarCredenciales($email, $password);
-
+            // Si no se encuentra el usuario, mostramos un mensaje genérico por seguridad
             if (!$usuario) {
-                error_log("Las credenciales son incorrectas para: " . $email);
-                throw new Exception('Credenciales incorrectas. Por favor, inténtalo de nuevo.');
+                error_log("Intento de inicio de sesión fallido: Usuario no encontrado - " . $email);
+                
+                // Usar el sistema de mensajes flash mejorado
+                setFlashMessage('error', 'Correo electrónico o contraseña incorrectos');
+                
+                // Registrar en el log de errores
+                error_log('Mensaje flash configurado: ' . 'Correo electrónico o contraseña incorrectos');
+                
+                // Redirigir al login
+                header('Location: ' . URL . 'auth/login');
+                exit;
+            }
+            
+            // Si el usuario existe pero la contraseña no coincide
+            if (!password_verify($password, $usuario['Password'])) {
+                error_log("Intento de inicio de sesión fallido: Contraseña incorrecta para el usuario - " . $email);
+                
+                // Usar el sistema de mensajes flash mejorado
+                setFlashMessage('error', 'Contraseña incorrecta. Por favor, inténtalo de nuevo o usa la opción de recuperar contraseña.');
+                
+                // Registrar en el log de errores
+                error_log('Mensaje flash configurado: ' . 'Contraseña incorrecta. Por favor, inténtalo de nuevo o usa la opción de recuperar contraseña.');
+                
+                // Redirigir al login
+                header('Location: ' . URL . 'auth/login');
+                exit;
+            }
+            
+            // Si llegamos aquí, el usuario y la contraseña son correctos
+            // Continuar con el proceso de autenticación exitosa
+            
+            if (!$usuario) {
+                error_log("Error al verificar credenciales para el usuario: " . $email);
+                $_SESSION['error'] = 'Ocurrió un error al iniciar sesión. Por favor, inténtalo de nuevo más tarde.';
+                header('Location: ' . BASE_URL . 'auth/login');
+                exit;
             }
 
             error_log("Autenticación exitosa para: " . $email);
@@ -85,59 +197,22 @@ class Auth extends ControllerBase {
             // Actualizar último acceso
             $this->usuarioModel->actualizarUltimoAcceso($usuario['Id_Usuario']);
 
-            // Redirigir según el rol del usuario
-            $this->redirigirSegunRol();
+            // Redirigir a la selección de roles
+            $this->seleccionarRol();
             
         } catch (Exception $e) {
+            // Asegurarse de que la sesión esté iniciada antes de guardar el error
+            if (session_status() === PHP_SESSION_NONE) {
+                session_start();
+            }
             $_SESSION['error'] = $e->getMessage();
+            
+            // Redirigir de vuelta al formulario de login con el mensaje de error
             header('Location: ' . BASE_URL . 'auth/login');
             exit;
         }
     }
 
-    /**
-     * Redirige al usuario según su rol
-     */
-    private function redirigirSegunRol() {
-        $rol = $_SESSION['usuario_rol'] ?? '';
-        
-        // Redirigir según el rol
-        switch (strtolower($rol)) {
-            case 'admin':
-                $destino = 'admin';
-                break;
-            case 'doctor':
-                $destino = 'doctor';
-                break;
-            case 'enfermerx':
-                $destino = 'enfermerx';
-                break;
-            case 'paciente':
-                $destino = 'paciente';
-                break;
-            default:
-                $destino = '';
-        }
-        
-        // Verificar si hay una URL de redirección guardada
-        $redirectUrl = $_SESSION['redirect_url'] ?? $destino;
-        unset($_SESSION['redirect_url']);
-        
-        // Construir la URL final
-        $finalUrl = rtrim(BASE_URL, '/') . '/' . ltrim($redirectUrl, '/');
-        
-        // Limpiar posibles dobles barras
-        $finalUrl = str_replace('//', '/', $finalUrl);
-        $finalUrl = str_replace(':/', '://', $finalUrl);
-        
-        error_log("Redirigiendo a: " . $finalUrl);
-        header('Location: ' . $finalUrl);
-        exit;
-    }
-
-    /**
-     * Cierra la sesión del usuario
-     */
     /**
      * Procesa el registro de un nuevo usuario.
      */
@@ -243,10 +318,20 @@ class Auth extends ControllerBase {
     }
 
     public function logout() {
-        // Destruir todas las variables de sesión
+        // Limpiar el buffer de salida
+        if (ob_get_level()) {
+            ob_end_clean();
+        }
+        
+        // Iniciar sesión si no está iniciada
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+        
+        // Limpiar todas las variables de sesión
         $_SESSION = [];
         
-        // Si se desea destruir la sesión completamente, borra también la cookie de sesión
+        // Eliminar la cookie de sesión
         if (ini_get("session.use_cookies")) {
             $params = session_get_cookie_params();
             setcookie(session_name(), '', time() - 42000,
@@ -255,11 +340,26 @@ class Auth extends ControllerBase {
             );
         }
         
-        // Finalmente, destruir la sesión
+        // Destruir la sesión
         session_destroy();
         
-        // Redirigir al login
-        header('Location: ');
+        // URL de login absoluta
+        $loginUrl = 'http://' . $_SERVER['HTTP_HOST'] . '/HealthMate.S.V/auth/login';
+        
+        // Redirección directa con JavaScript
+        echo '<!DOCTYPE html>
+        <html>
+        <head>
+            <title>Redirigiendo al login...</title>
+            <script>
+                // Redirigir inmediatamente
+                window.location.href = "' . $loginUrl . '";
+            </script>
+        </head>
+        <body>
+            <p>Redirigiendo al login... <a href="' . $loginUrl . '">Haz clic aquí si no eres redirigido</a>.</p>
+        </body>
+        </html>';
         exit;
     }
 }

@@ -2,8 +2,17 @@
 // views/auth/login.view.php
 
 $titulo = 'Iniciar Sesión - HealthMate';
-$error = $_SESSION['error'] ?? '';
-unset($_SESSION['error']);
+
+// Verificar si se ha pasado un mensaje de error desde el controlador
+$error = $error ?? '';
+
+// Si no hay error, verificar si hay un mensaje flash
+if (empty($error) && function_exists('getFlashMessage')) {
+    $flash = getFlashMessage();
+    if ($flash && $flash['type'] === 'error') {
+        $error = $flash['message'];
+    }
+}
 
 require_once __DIR__ . '/../layouts/header.php';
 ?>
@@ -17,11 +26,17 @@ require_once __DIR__ . '/../layouts/header.php';
                     <p class="mb-0">Sistema de Gestión Médica</p>
                 </div>
                 <div class="card-body">
-                    <?php if ($error): ?>
-                        <div class="alert alert-danger"><?php echo htmlspecialchars($error); ?></div>
-                    <?php endif; ?>
+                    <?php 
+                    // Mostrar mensaje de error si existe
+                    if (!empty($error)): 
+                        echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">';
+                        echo htmlspecialchars($error);
+                        echo '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>';
+                        echo '</div>';
+                    endif; 
+                    ?>
                     
-                    <form action="/auth/login" method="post" id="loginForm" class="needs-validation" novalidate>
+                    <form action="<?php echo BASE_URL; ?>auth/login" method="post" id="loginForm" class="needs-validation" novalidate>
                         <div class="mb-3">
                             <label for="email" class="form-label">Correo Electrónico</label>
                             <div class="input-group">
@@ -49,7 +64,8 @@ require_once __DIR__ . '/../layouts/header.php';
                                     <i class="fas fa-eye"></i>
                                 </button>
                                 <div class="invalid-feedback">
-                        </div>
+                                    La contraseña es obligatoria.
+                                </div>
                         
                         <!-- Remember Me & Forgot Password -->
                         <div class="flex items-center justify-between mb-6">
@@ -90,51 +106,45 @@ require_once __DIR__ . '/../layouts/header.php';
                     Al iniciar sesión, aceptas nuestros 
                     <a href="/terminos" class="text-decoration-none">Términos de Servicio</a> y 
                     <a href="/privacidad" class="text-decoration-none">Política de Privacidad</a>.
-                </small>
             </div>
         </div>
     </div>
-</div>
 
-<script>
-// Mostrar/ocultar contraseña
-document.getElementById('togglePassword').addEventListener('click', function() {
-    const password = document.getElementById('password');
-    const icon = this.querySelector('i');
-    if (password.type === 'password') {
-        password.type = 'text';
-        icon.classList.remove('fa-eye');
-        icon.classList.add('fa-eye-slash');
-    } else {
-        password.type = 'password';
-        icon.classList.remove('fa-eye-slash');
-        icon.classList.add('fa-eye');
-    }
-});
-
-// Validación del formulario
-(function () {
-    'use strict'
-    
-    // Obtener el formulario al que queremos aplicar la validación
-    var form = document.getElementById('loginForm')
-    
-    // Validar al enviar el formulario
-    form.addEventListener('submit', function (event) {
-        if (!form.checkValidity()) {
-            event.preventDefault()
-            event.stopPropagation()
+    <script>
+    // Mostrar/ocultar contraseña
+    document.addEventListener('DOMContentLoaded', function() {
+        const togglePassword = document.getElementById('togglePassword');
+        if (togglePassword) {
+ 
+            togglePassword.addEventListener('click', function() {
+                const passwordInput = document.getElementById('password');
+                const icon = this.querySelector('i');
+                
+                if (passwordInput.type === 'password') {
+                    passwordInput.type = 'text';
+                    icon.classList.remove('fa-eye');
+                    icon.classList.add('fa-eye-slash');
+                } else {
+                    passwordInput.type = 'password';
+                    icon.classList.remove('fa-eye-slash');
+                    icon.classList.add('fa-eye');
+                }
+            });
         }
-        
-        form.classList.add('was-validated')
-    }, false)
-    
-    // Inicializar tooltips de Bootstrap
-    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-    tooltipTriggerList.map(function (tooltipTriggerEl) {
-        return new bootstrap.Tooltip(tooltipTriggerEl)
-    })
-})()
-</script>
+
+        // Validación del formulario
+        const form = document.getElementById('loginForm');
+        if (form) {
+            form.addEventListener('submit', function(event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                
+                form.classList.add('was-validated');
+            }, false);
+        }
+    });
+    </script>
 
 <?php require_once __DIR__ . '/../layouts/footer.php'; ?>

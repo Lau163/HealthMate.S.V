@@ -18,7 +18,36 @@ class Paciente extends ControllerBase
             }
         }
         $this->view->set('pacientes', $pacientes);
-        $this->view->render('paciente/paciente');
+        $this->view->render('paciente/index');
+    }
+
+    // Panel tipo dashboard para pacientes (estilo enfermerx)
+    public function panel()
+    {
+        // Seguridad básica: requerir sesión
+        if (!isset($_SESSION['usuario_id'])) {
+            header('Location: ' . BASE_URL . 'auth');
+            exit;
+        }
+
+        $totalPacientes = 0;
+        try {
+            $lista = $this->model ? $this->model->getAll() : [];
+            $totalPacientes = is_array($lista) ? count($lista) : 0;
+        } catch (Throwable $th) {
+            $totalPacientes = 0;
+        }
+
+        // Datos de ejemplo para KPIs adicionales
+        $citasPendientes = 5; // TODO: integrar cuando exista módulo de citas
+        $alertas = 2; // TODO: integrar alertas reales
+
+        $this->view->set('kpis', [
+            'totalPacientes' => $totalPacientes,
+            'citasPendientes' => $citasPendientes,
+            'alertas' => $alertas,
+        ]);
+        $this->view->render('paciente/index');
     }
 
     // Mostrar formulario de edición o actualizar un paciente (según método)

@@ -138,4 +138,22 @@ class UsuarioModel extends ModelBase {
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    
+    /**
+     * Obtiene los roles asignados a un usuario específico
+     * 
+     * @param int $usuarioId ID del usuario
+     * @return array Lista de roles del usuario
+     */
+    public function obtenerRolesPorUsuario($usuarioId) {
+        $query = "SELECT r.* FROM roles r 
+                 INNER JOIN usuarios u ON r.Id_Rol = u.Id_Rol 
+                 WHERE u.Id_Usuario = :usuarioId";
+        
+        $stmt = $this->con->pdo->prepare($query);
+        $stmt->bindParam(':usuarioId', $usuarioId, PDO::PARAM_INT);
+        $stmt->execute();
+        
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

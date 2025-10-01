@@ -7,6 +7,7 @@ class Enfermerx extends ControllerBase
         // Cargar modelo
         // $this->loadModel('enfermerx');
     }
+    
     function render(){
         $this->view->render('enfermerx/index');
     }
