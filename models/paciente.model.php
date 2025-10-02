@@ -11,94 +11,68 @@ class PacienteModel extends ModelBase
     {
         parent::__construct();
     }
-  
-  /**
-   * Obtiene todos los pacientes a partir de la tabla usuarios con rol 'paciente'.
-   */
-  public function getAll()
-  {
-      $sql = "SELECT u.Id_Usuario,
-                     u.Nombre,
-                     u.Email,
-                     u.Edad,
-                     u.Sexo,
-                     u.Peso,
-                     u.Altura,
-                     u.Tipo_sangre,
-                     u.Alergias,
-                     u.Enfermedades,
-                     r.Nombre_Rol AS Rol
-              FROM usuarios u
-              INNER JOIN roles r ON r.Id_Rol = u.Id_Rol
-              WHERE LOWER(r.Nombre_Rol) = 'paciente'";
-      $stmt = $this->con->pdo->prepare($sql);
-      $stmt->execute();
-      return $stmt->fetchAll(PDO::FETCH_ASSOC);
-  }
 
-  /**
-   * Obtiene un paciente por Id_Usuario si su rol es paciente.
-   */
-  public function getById($id)
-  {
-      $sql = "SELECT u.Id_Usuario,
-                     u.Nombre,
-                     u.Email,
-                     u.Edad,
-                     u.Sexo,
-                     u.Peso,
-                     u.Altura,
-                     u.Tipo_sangre,
-                     u.Alergias,
-                     u.Enfermedades,
-                     r.Nombre_Rol AS Rol
-              FROM usuarios u
-              INNER JOIN roles r ON r.Id_Rol = u.Id_Rol
-              WHERE u.Id_Usuario = :id AND LOWER(r.Nombre_Rol) = 'paciente'";
-      $stmt = $this->con->pdo->prepare($sql);
-      $stmt->bindValue(':id', $id, PDO::PARAM_INT);
-      $stmt->execute();
-      return $stmt->fetch(PDO::FETCH_ASSOC);
-  }
+    public function deleteById($id)
+    {
+        $stmt = $this->con->pdo->prepare("DELETE FROM usuarios WHERE Id_Usuario = :id");
+        return $stmt->execute([':id' => $id]);
+    }
 
-  /**
-   * Actualiza un paciente (registro en usuarios) por Id_Usuario.
-   */
-  public function updateById($id, $datos)
-  {
-      $sql = "UPDATE usuarios SET 
-                Nombre = :Nombre,
-                Email = :Email,
-                Edad = :Edad,
-                Sexo = :Sexo,
-                Peso = :Peso,
-                Altura = :Altura,
-                Tipo_sangre = :Tipo_sangre,
-                Alergias = :Alergias,
-                Enfermedades = :Enfermedades
-              WHERE Id_Usuario = :Id_Usuario";
-      $stmt = $this->con->pdo->prepare($sql);
-      return $stmt->execute([
-          ':Nombre' => $datos['Nombre'] ?? null,
-          ':Email' => $datos['Email'] ?? null,
-          ':Edad' => $datos['Edad'] ?? null,
-          ':Sexo' => $datos['Sexo'] ?? null,
-          ':Peso' => $datos['Peso'] ?? null,
-          ':Altura' => $datos['Altura'] ?? null,
-          ':Tipo_sangre' => $datos['Tipo_sangre'] ?? null,
-          ':Alergias' => $datos['Alergias'] ?? null,
-          ':Enfermedades' => $datos['Enfermedades'] ?? null,
-          ':Id_Usuario' => $id,
-      ]);
-  }
+    /**
+     * Inserta un nuevo paciente en la tabla usuarios con el rol 'paciente'.
+     * Acepta datos flexibles provenientes de formularios de Doctor/Enfermerx.
+     */
+    public function insert($datos)
+    {
+        // Resolver Id_Rol para 'paciente'
+        $stmtRol = $this->con->pdo->prepare("SELECT Id_Rol FROM roles WHERE LOWER(Nombre_Rol) = 'paciente' LIMIT 1");
+        $stmtRol->execute();
+        $rol = $stmtRol->fetch(PDO::FETCH_ASSOC);
+        if (!$rol || empty($rol['Id_Rol'])) {
+            throw new Exception("No se encontró el rol 'paciente'");
+        }
+        $idRolPaciente = (int)$rol['Id_Rol'];
 
-  /**
-   * Elimina (hard delete) un paciente por Id_Usuario.
-   */
-  public function deleteById($id)
-  {
-      $stmt = $this->con->pdo->prepare("DELETE FROM usuarios WHERE Id_Usuario = :id");
-      return $stmt->execute([':id' => $id]);
-  }
+        // Mapear entradas comunes de formularios a columnas de usuarios
+        $nombres = trim(($datos['nombres'] ?? '') . ' ' . ($datos['apellidos'] ?? ''));
+        $nombre = $datos['Nombre'] ?? ($nombres ?: null);
+        $email = $datos['Email'] ?? ($datos['email'] ?? null);
+        $sexo = $datos['Sexo'] ?? ($datos['genero'] ?? null);
+        $peso = $datos['Peso'] ?? null;
+        $altura = $datos['Altura'] ?? null;
+        $tipoSangre = $datos['Tipo_sangre'] ?? ($datos['tipo_sangre'] ?? null);
+        $alergias = $datos['Alergias'] ?? ($datos['alergias'] ?? null);
+        $enfermedades = $datos['Enfermedades'] ?? ($datos['enfermedades'] ?? ($datos['enfermedades_cronicas'] ?? null));
+
+        // Calcular edad si se proporciona fecha_nacimiento
+        $edad = $datos['Edad'] ?? null;
+        if (!$edad && !empty($datos['fecha_nacimiento'])) {
+            try {
+                $fn = new DateTime($datos['fecha_nacimiento']);
+                $hoy = new DateTime('today');
+                $edad = (int)$fn->diff($hoy)->y;
+            } catch (Throwable $e) {
+                $edad = null;
+            }
+        }
+
+        $sql = "INSERT INTO usuarios (Nombre, Email, Edad, Sexo, Peso, Altura, Tipo_sangre, Alergias, Enfermedades, Id_Rol)
+                VALUES (:Nombre, :Email, :Edad, :Sexo, :Peso, :Altura, :Tipo_sangre, :Alergias, :Enfermedades, :Id_Rol)";
+        $stmt = $this->con->pdo->prepare($sql);
+        $ok = $stmt->execute([
+            ':Nombre' => $nombre,
+            ':Email' => $email,
+            ':Edad' => $edad,
+            ':Sexo' => $sexo,
+            ':Peso' => $peso,
+            ':Altura' => $altura,
+            ':Tipo_sangre' => $tipoSangre,
+            ':Alergias' => $alergias,
+            ':Enfermedades' => $enfermedades,
+            ':Id_Rol' => $idRolPaciente,
+        ]);
+        if (!$ok) return false;
+        return (int)$this->con->pdo->lastInsertId();
+    }
 }
 endif;

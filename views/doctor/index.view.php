@@ -155,14 +155,14 @@
                             <h2 class="text-xl font-semibold text-gray-800">Lista de Pacientes</h2>
                             <p class="text-sm text-gray-500 mt-1">Gestiona los pacientes del sistema</p>
                         </div>
-                        <button class="mt-4 md:mt-0 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-md text-sm font-medium transition duration-150 ease-in-out">
-                            <i class="fas fa-plus mr-2"></i>Nuevo Doctor
-                        </button>
+                        <a href="<?= BASE_URL ?>doctor/nuevo-paciente" class="mt-4 md:mt-0 inline-flex items-center bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-md text-sm font-medium transition duration-150 ease-in-out">
+                            <i class="fas fa-plus mr-2"></i>Nuevo Paciente
+                        </a>
                     </div>
                     
                     <?php 
-                    // Obtener los doctor del controlador
-                    $doctor = $doctor ?? ($this->get('doctor') ?? []);
+                    // Obtener los pacientes del controlador
+                    $pacientes = $pacientes ?? ($this->get('pacientes') ?? []);
                     $error = $_SESSION['error'] ?? '';
                     $success = $_SESSION['success'] ?? '';
                     
@@ -202,16 +202,16 @@
                     
                     <!-- Table -->
                     <div class="overflow-x-auto">
-                        <?php if (empty($doctor)): ?>
+                        <?php if (empty($pacientes)): ?>
                             <div class="text-center py-4 text-gray-500">
-                                No hay doctor para mostrar.
+                                No hay pacientes para mostrar.
                             </div>
                         <?php else: ?>
                             <table class="min-w-full divide-y divide-gray-200">
                                 <thead class="bg-gray-50">
                                     <tr>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Doctor</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Paciente</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Edad</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sexo</th>
@@ -222,8 +222,8 @@
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white divide-y divide-gray-200">
-                                    <?php foreach ($doctor as $doctor): 
-                                        $nombreCompleto = trim(($doctor['Nombres'] ?? '') . ' ' . ($doctor['Apellidos'] ?? ''));
+                                    <?php foreach ($pacientes as $paciente): 
+                                        $nombreCompleto = trim($paciente['Nombre'] ?? '');
                                         $iniciales = '';
                                         if (!empty($nombreCompleto)) {
                                             $nombres = explode(' ', $nombreCompleto);
@@ -232,7 +232,7 @@
                                     ?>
                                         <tr class="hover:bg-gray-50">
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                <?php echo htmlspecialchars($doctor['Id_Usuario'] ?? ''); ?>
+                                                <?php echo htmlspecialchars($paciente['Id_Usuario'] ?? ''); ?>
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap">
                                                 <div class="flex items-center">
@@ -240,17 +240,17 @@
                                                         <span class="text-emerald-600 font-medium"><?php echo $iniciales; ?></span>
                                                     </div>
                                                     <div class="text-sm font-medium text-gray-900">
-                                                        <?php echo htmlspecialchars($doctor['Nombre'] ?? 'Sin nombre'); ?>
+                                                        <?php echo htmlspecialchars($paciente['Nombre'] ?? 'Sin nombre'); ?>
                                                     </div>
                                                 </div>
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                <?php echo htmlspecialchars($doctor['Email'] ?? 'No especificado'); ?>
+                                                <?php echo htmlspecialchars($paciente['Email'] ?? 'No especificado'); ?>
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                                 <?php 
-                                                if (!empty($doctor['Edad'])) {
-                                                    echo htmlspecialchars($doctor['Edad']) . ' años';
+                                                if (!empty($paciente['Edad'])) {
+                                                    echo htmlspecialchars($paciente['Edad']) . ' años';
                                                 } else {
                                                     echo 'No especificado';
                                                 }
@@ -258,7 +258,7 @@
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                                 <?php 
-                                                $sexo = $doctor['Sexo'] ?? '';
+                                                $sexo = $paciente['Sexo'] ?? '';
                                                 if ($sexo === 'M') {
                                                     echo 'Masculino';
                                                 } elseif ($sexo === 'F') {
@@ -270,8 +270,8 @@
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                                 <?php 
-                                                if (!empty($doctor['Altura'])) {
-                                                    echo htmlspecialchars($doctor['Altura']) . ' cm';
+                                                if (!empty($paciente['Altura'])) {
+                                                    echo htmlspecialchars($paciente['Altura']) . ' cm';
                                                 } else {
                                                     echo 'No especificado';
                                                 }
@@ -279,15 +279,15 @@
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                                 <?php 
-                                                echo !empty($doctor['Tipo_sangre']) 
-                                                    ? htmlspecialchars($doctor['Tipo_sangre'])
+                                                echo !empty($paciente['Tipo_sangre']) 
+                                                    ? htmlspecialchars($paciente['Tipo_sangre'])
                                                     : 'No especificado';
                                                 ?>
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                                 <?php 
-                                                if (!empty($doctor['Fecha_Registro'])) {
-                                                    $fecha = new DateTime($doctor['Fecha_Registro']);
+                                                if (!empty($paciente['Fecha_Registro'])) {
+                                                    $fecha = new DateTime($paciente['Fecha_Registro']);
                                                     echo $fecha->format('d/m/Y');
                                                 } else {
                                                     echo 'No especificado';
@@ -295,13 +295,13 @@
                                                 ?>
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                                <a href="<?php echo URL; ?>doctor/ver/<?php echo $doctor['Id_Usuario']; ?>" class="text-emerald-600 hover:text-emerald-900 mr-3" title="Ver">
+                                                <a href="<?php echo URL; ?>paciente/ver/<?php echo $paciente['Id_Usuario']; ?>" class="text-emerald-600 hover:text-emerald-900 mr-3" title="Ver">
                                                     <i class="far fa-eye"></i>
                                                 </a>
-                                                <a href="<?php echo URL; ?>doctor/editar/<?php echo $doctor['Id_Usuario']; ?>" class="text-blue-600 hover:text-blue-900 mr-3" title="Editar">
+                                                <a href="<?php echo URL; ?>paciente/editar/<?php echo $paciente['Id_Usuario']; ?>" class="text-blue-600 hover:text-blue-900 mr-3" title="Editar">
                                                     <i class="far fa-edit"></i>
                                                 </a>
-                                                <a href="<?php echo URL; ?>doctor/eliminar/<?php echo $doctor['Id_Usuario']; ?>" class="text-red-600 hover:text-red-900" title="Eliminar" onclick="return confirm('¿Estás seguro de eliminar este paciente?')">
+                                                <a href="<?php echo URL; ?>paciente/eliminar/<?php echo $paciente['Id_Usuario']; ?>" class="text-red-600 hover:text-red-900" title="Eliminar" onclick="return confirm('¿Estás seguro de eliminar este paciente?')">
                                                     <i class="far fa-trash-alt"></i>
                                                 </a>
                                             </td>

@@ -65,22 +65,17 @@
     </style>
 </head>
 <body class="min-h-screen bg-emerald-500 flex items-center justify-center p-4">
-    <!-- Botón Dark Mode -->
-    <button id="darkModeToggle" class="absolute top-6 right-6 bg-white dark:bg-slate-800 text-teal-700 dark:text-teal-400 rounded-full p-2 shadow-lg transition duration-200" title="Cambiar modo">
-        🌙
-    </button>
     <div class="w-full max-w-4xl bg-white rounded-xl shadow-xl overflow-hidden flex flex-col md:flex-row">
      <div class="w-full max-w-4xl bg-white rounded-xl shadow-xl overflow-hidden flex flex-col md:flex-row">
         <!-- Imagen de inicio de sesión (visible solo en escritorio) -->
         <div class="login-image w-full md:w-2/5 bg-gray-100 flex items-center justify-center p-8">
-            <div class="w-full h-48 md:h-64 bg-stone-300 rounded-lg shadow-md flex items-center justify-center">
-                <span class="text-gray-500">Logo/Imagen</span>
+            <div class="w-full h-48 md:h-64 flex items-center justify-center">
+                <img src="<?= URL ?>public/img/LOGO.PNG" alt="HealthMate Logo" class="max-w-full max-h-full object-contain">
             </div>
         </div>
         
         <!-- Formulario de inicio de sesión -->
        <div class="login-container w-full md:w-3/5 p-8 md:p-12">
-    <!-- Tabs -->
     <div class="mb-8 border-b border-gray-200">
         <nav class="flex space-x-4" id="tabs-nav">
             <button class="tab-btn text-teal-700 font-bold py-2 px-4 border-b-2 border-teal-700 focus:outline-none" data-tab="login">Iniciar Sesión</button>

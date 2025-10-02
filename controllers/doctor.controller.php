@@ -38,6 +38,16 @@ class Doctor extends ControllerBase
             'citasHoy' => $citasHoy,
             'alertas' => $alertas,
         ]);
+        // Cargar lista de pacientes para mostrar en la vista del Doctor
+        try {
+            if (class_exists('PacienteModel')) {
+                $pm = new PacienteModel();
+                $pacientes = $pm->getAll();
+                $this->view->set('pacientes', $pacientes);
+            }
+        } catch (Throwable $th) {
+            // opcional: log error y continuar sin pacientes
+        }
         $this->view->render('doctor/index');
     }
 
