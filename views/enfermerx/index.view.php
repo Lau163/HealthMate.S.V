@@ -56,7 +56,6 @@
     </script>
 </head>
 <body class="bg-gray-100 overflow-hidden">
-<<<<<<< Updated upstream
     <div class="flex h-screen w-full">
         <!-- Sidebar -->
         <div id="sidebar" class="bg-white shadow-lg w-64 h-full transition-all duration-300 ease-in-out z-50 fixed md:relative flex-shrink-0">
@@ -72,42 +71,54 @@
             
             <!-- Navigation -->
             <nav class="mt-8">
-                <div class="px-2 space-y-1">
-                    <!-- Dashboard -->
-                    <a href="#" class="sidebar-item flex items-center px-6 py-3 text-sm font-medium rounded-md text-emerald-600 bg-emerald-50">
-                        <i class="fas fa-home text-lg"></i>
-                        <span class="sidebar-text ml-3 hidden md:inline-block">Inicio</span>
-                    </a>
-                    
-                    <!-- Enfermerx -->
-                    <a href="#" class="sidebar-item flex items-center px-6 py-3 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-50">
-                        <i class="fas fa-users text-lg"></i>
-                        <span class="sidebar-text ml-3 hidden md:inline-block">Enfermerx</span>
-                    </a>
-                    
-                    <!-- Reservas -->
-                    <a href="#" class="sidebar-item flex items-center px-6 py-3 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-50">
-                        <i class="far fa-calendar-alt text-lg"></i>
-                        <span class="sidebar-text ml-3 hidden md:inline-block">Reservas</span>
-                    </a>
-                    
-                    <!-- Servicios -->
-                    <a href="#" class="sidebar-item flex items-center px-6 py-3 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-50">
-                        <i class="fas fa-concierge-bell text-lg"></i>
-                        <span class="sidebar-text ml-3 hidden md:inline-block">Servicios</span>
-                    </a>
-                    
-                    <!-- Mascotas -->
-                    <a href="#" class="sidebar-item flex items-center px-6 py-3 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-50">
-                        <i class="fas fa-paw text-lg"></i>
-                        <span class="sidebar-text ml-3 hidden md:inline-block">Mascotas</span>
-                    </a>
-                    
-                    <!-- Reportes -->
-                    <a href="#" class="sidebar-item flex items-center px-6 py-3 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-50">
-                        <i class="fas fa-chart-bar text-lg"></i>
-                        <span class="sidebar-text ml-3 hidden md:inline-block">Reportes</span>
-                    </a>
+                <div class="px-2 space-y-1 flex flex-col h-[calc(100vh-200px)]">
+                    <div class="space-y-1">
+                        <!-- Dashboard -->
+                        <a href="#" class="sidebar-item flex items-center px-6 py-3 text-sm font-medium rounded-md text-emerald-600 bg-emerald-50">
+                            <i class="fas fa-home text-lg"></i>
+                            <span class="sidebar-text ml-3 hidden md:inline-block">Inicio</span>
+                        </a>
+                        
+                        <!-- Enfermerx -->
+                        <a href="#" class="sidebar-item flex items-center px-6 py-3 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-50">
+                            <i class="fas fa-users text-lg"></i>
+                            <span class="sidebar-text ml-3 hidden md:inline-block">Enfermerx</span>
+                        </a>
+                        
+                        <!-- Reservas -->
+                        <a href="#" class="sidebar-item flex items-center px-6 py-3 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-50">
+                            <i class="far fa-calendar-alt text-lg"></i>
+                            <span class="sidebar-text ml-3 hidden md:inline-block">Reservas</span>
+                        </a>
+                        
+                        <!-- Servicios -->
+                        <a href="#" class="sidebar-item flex items-center px-6 py-3 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-50">
+                            <i class="fas fa-concierge-bell text-lg"></i>
+                            <span class="sidebar-text ml-3 hidden md:inline-block">Servicios</span>
+                        </a>
+                        
+                        <!-- Mascotas -->
+                        <a href="#" class="sidebar-item flex items-center px-6 py-3 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-50">
+                            <i class="fas fa-paw text-lg"></i>
+                            <span class="sidebar-text ml-3 hidden md:inline-block">Mascotas</span>
+                        </a>
+                        
+                        <!-- Reportes -->
+                        <a href="#" class="sidebar-item flex items-center px-6 py-3 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-50">
+                            <i class="fas fa-chart-bar text-lg"></i>
+                            <span class="sidebar-text ml-3 hidden md:inline-block">Reportes</span>
+                        </a>
+                    </div>
+
+                    <!-- Botón de Cerrar Sesión -->
+                    <div class="mt-auto pb-8">
+                        <form action="<?= BASE_URL ?>auth/logout" method="post" class="w-full">
+                            <button type="submit" class="w-full sidebar-item flex items-center px-6 py-3 text-sm font-medium rounded-md text-red-600 hover:bg-red-50 transition-colors">
+                                <i class="fas fa-sign-out-alt text-lg"></i>
+                                <span class="sidebar-text ml-3 hidden md:inline-block">Cerrar Sesión</span>
+                            </button>
+                        </form>
+                    </div>
                 </div>
             </nav>
         </div>
@@ -154,11 +165,16 @@
                     <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
                         <div>
                             <h2 class="text-xl font-semibold text-gray-800">Lista de Pacientes</h2>
+                            <?php if (isset($error)): ?>
+                                <div class="mt-2 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+                                    <?php echo htmlspecialchars($error); ?>
+                                </div>
+                            <?php endif; ?>
                             <p class="text-sm text-gray-500 mt-1">Gestiona los pacientes del sistema</p>
                         </div>
-                        <a href="<?= BASE_URL ?>doctor/nuevo-paciente" class="mt-4 md:mt-0 inline-flex items-center bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-md text-sm font-medium transition duration-150 ease-in-out">
+                        <button onclick="abrirModalNuevoPaciente()" class="mt-4 md:mt-0 inline-flex items-center bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-md text-sm font-medium transition duration-150 ease-in-out">
                             <i class="fas fa-plus mr-2"></i>Nuevo Paciente
-                        </a>
+                        </button>
                     </div>
                     
                     <?php 
@@ -296,15 +312,15 @@
                                                 ?>
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                                <a href="<?php echo URL; ?>paciente/ver/<?php echo $paciente['Id_Usuario']; ?>" class="text-emerald-600 hover:text-emerald-900 mr-3" title="Ver">
+                                                <button onclick="verPaciente(<?php echo htmlspecialchars(json_encode($paciente)); ?>)" class="text-emerald-600 hover:text-emerald-900 mr-3" title="Ver">
                                                     <i class="far fa-eye"></i>
-                                                </a>
-                                                <a href="<?php echo URL; ?>paciente/editar/<?php echo $paciente['Id_Usuario']; ?>" class="text-blue-600 hover:text-blue-900 mr-3" title="Editar">
+                                                </button>
+                                                <button onclick="editarPaciente(<?php echo htmlspecialchars(json_encode($paciente)); ?>)" class="text-blue-600 hover:text-blue-900 mr-3" title="Editar">
                                                     <i class="far fa-edit"></i>
-                                                </a>
-                                                <a href="<?php echo URL; ?>paciente/eliminar/<?php echo $paciente['Id_Usuario']; ?>" class="text-red-600 hover:text-red-900" title="Eliminar" onclick="return confirm('¿Estás seguro de eliminar este paciente?')">
+                                                </button>
+                                                <button onclick="confirmarEliminarPaciente(<?php echo htmlspecialchars(json_encode(['Id_Usuario' => $paciente['Id_Usuario'], 'Nombre' => $paciente['Nombre']])); ?>)" class="text-red-600 hover:text-red-900" title="Eliminar">
                                                     <i class="far fa-trash-alt"></i>
-                                                </a>
+                                                </button>
                                             </td>
                                         </tr>
                                     <?php endforeach; ?>
@@ -339,6 +355,149 @@
     </div>
     
     <script>
+        // Funciones para manejar pacientes
+        function verPaciente(paciente) {
+            // Formatear los datos del paciente para mostrarlos
+            const detalles = `
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <p class="text-sm text-gray-500">Nombre completo</p>
+                        <p class="font-medium">${paciente.Nombre || 'No especificado'}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500">Correo electrónico</p>
+                        <p class="font-medium">${paciente.Email || 'No especificado'}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500">Edad</p>
+                        <p class="font-medium">${paciente.Edad || 'No especificado'}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500">Sexo</p>
+                        <p class="font-medium">${paciente.Sexo || 'No especificado'}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500">Tipo de sangre</p>
+                        <p class="font-medium">${paciente.Tipo_sangre || 'No especificado'}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500">Peso</p>
+                        <p class="font-medium">${paciente.Peso ? paciente.Peso + ' kg' : 'No especificado'}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500">Altura</p>
+                        <p class="font-medium">${paciente.Altura ? paciente.Altura + ' cm' : 'No especificado'}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500">Alergias</p>
+                        <p class="font-medium">${paciente.Alergias || 'Ninguna registrada'}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500">Enfermedades crónicas</p>
+                        <p class="font-medium">${paciente.Enfermedades || 'Ninguna registrada'}</p>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('detallesPaciente').innerHTML = detalles;
+            abrirModal('verPacienteModal');
+        }
+        
+        function editarPaciente(paciente) {
+            // Llenar el formulario con los datos del paciente
+            document.getElementById('editar_id').value = paciente.Id_Usuario;
+            document.getElementById('editar_nombre').value = paciente.Nombre || '';
+            document.getElementById('editar_email').value = paciente.Email || '';
+            document.getElementById('editar_edad').value = paciente.Edad || '';
+            document.getElementById('editar_sexo').value = paciente.Sexo || '';
+            document.getElementById('editar_tipo_sangre').value = paciente.Tipo_sangre || '';
+            document.getElementById('editar_peso').value = paciente.Peso || '';
+            document.getElementById('editar_altura').value = paciente.Altura || '';
+            document.getElementById('editar_alergias').value = paciente.Alergias || '';
+            document.getElementById('editar_enfermedades').value = paciente.Enfermedades || '';
+            
+            // Configurar el formulario para la actualización
+            const form = document.getElementById('formEditarPaciente');
+            form.action = `<?= BASE_URL ?>enfermerx/editar/${paciente.Id_Usuario}`;
+            
+            abrirModal('editarPacienteModal');
+        }
+        
+        function confirmarEliminarPaciente(paciente) {
+            document.getElementById('nombrePacienteEliminar').textContent = paciente.Nombre || 'este paciente';
+            
+            // Configurar el botón de confirmación
+            const btnEliminar = document.getElementById('confirmarEliminar');
+            btnEliminar.onclick = function() {
+                // Realizar la petición de eliminación
+                fetch(`<?= BASE_URL ?>enfermerx/eliminar/${paciente.Id_Usuario}`, {
+                    method: 'POST',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Content-Type': 'application/json',
+                    },
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Recargar la página para ver los cambios
+                        window.location.reload();
+                    } else {
+                        alert(data.message || 'Error al eliminar el paciente');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Ocurrió un error al intentar eliminar el paciente');
+                });
+                
+                cerrarModal('eliminarPacienteModal');
+            };
+            
+            abrirModal('eliminarPacienteModal');
+        }
+        
+        // Manejar el envío del formulario de edición
+        const formEditarPaciente = document.getElementById('formEditarPaciente');
+        if (formEditarPaciente) {
+            formEditarPaciente.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const formData = new FormData(this);
+                
+                fetch(this.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Recargar la página para ver los cambios
+                        window.location.reload();
+                    } else {
+                        alert(data.message || 'Error al actualizar el paciente');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Ocurrió un error al intentar actualizar el paciente');
+                });
+            });
+        }
+        
+        // Cerrar modales al hacer clic fuera del contenido
+        document.querySelectorAll('.fixed.inset-0').forEach(modal => {
+            modal.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.classList.add('hidden');
+                    document.body.classList.remove('overflow-hidden');
+                }
+            });
+        });
+        
         // Mobile menu toggle
         document.getElementById('mobile-menu-button').addEventListener('click', function() {
             const sidebar = document.getElementById('sidebar');
@@ -353,44 +512,436 @@
             }
         });
     </script>
+    
+    <!-- Modal Nuevo Paciente -->
+    <div id="nuevoPacienteModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
+        <div class="relative top-20 mx-auto p-5 border w-11/12 md:w-2/3 lg:w-1/2 shadow-lg rounded-md bg-white">
+            <div class="flex justify-between items-center pb-3">
+                <h3 class="text-xl font-semibold text-gray-800">Nuevo Paciente</h3>
+                <button onclick="document.getElementById('nuevoPacienteModal').classList.add('hidden')" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times text-2xl"></i>
+                </button>
+            </div>
+            
+            <form id="formNuevoPaciente" action="<?= BASE_URL ?>enfermerx/guardarPaciente" method="POST">
+                <div class="space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="nombre" class="block text-sm font-medium text-gray-700">Nombre completo *</label>
+                            <input type="text" id="nombre" name="nombre" required 
+                                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring focus:ring-emerald-200 focus:ring-opacity-50">
+                        </div>
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-gray-700">Correo electrónico *</label>
+                            <input type="email" id="email" name="email" required
+                                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring focus:ring-emerald-200 focus:ring-opacity-50">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label for="edad" class="block text-sm font-medium text-gray-700">Edad</label>
+                            <input type="number" id="edad" name="edad" min="0" max="120"
+                                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring focus:ring-emerald-200 focus:ring-opacity-50">
+                        </div>
+                        <div>
+                            <label for="sexo" class="block text-sm font-medium text-gray-700">Sexo</label>
+                            <select id="sexo" name="sexo" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring focus:ring-emerald-200 focus:ring-opacity-50">
+                                <option value="">Seleccionar...</option>
+                                <option value="M">Masculino</option>
+                                <option value="F">Femenino</option>
+                                <option value="O">Otro</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="tipo_sangre" class="block text-sm font-medium text-gray-700">Tipo de sangre</label>
+                            <select id="tipo_sangre" name="tipo_sangre" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring focus:ring-emerald-200 focus:ring-opacity-50">
+                                <option value="">Desconocido</option>
+                                <option value="A+">A+</option>
+                                <option value="A-">A-</option>
+                                <option value="B+">B+</option>
+                                <option value="B-">B-</option>
+                                <option value="AB+">AB+</option>
+                                <option value="AB-">AB-</option>
+                                <option value="O+">O+</option>
+                                <option value="O-">O-</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="peso" class="block text-sm font-medium text-gray-700">Peso (kg)</label>
+                            <input type="number" id="peso" name="peso" step="0.1" min="0" max="300"
+                                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring focus:ring-emerald-200 focus:ring-opacity-50">
+                        </div>
+                        <div>
+                            <label for="altura" class="block text-sm font-medium text-gray-700">Altura (cm)</label>
+                            <input type="number" id="altura" name="altura" min="0" max="250"
+                                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring focus:ring-emerald-200 focus:ring-opacity-50">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="alergias" class="block text-sm font-medium text-gray-700">Alergias</label>
+                        <textarea id="alergias" name="alergias" rows="2"
+                                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring focus:ring-emerald-200 focus:ring-opacity-50"></textarea>
+                    </div>
+
+                    <div>
+                        <label for="enfermedades" class="block text-sm font-medium text-gray-700">Enfermedades crónicas</label>
+                        <textarea id="enfermedades" name="enfermedades" rows="2"
+                                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring focus:ring-emerald-200 focus:ring-opacity-50"></textarea>
+                    </div>
+                </div>
+
+                <div class="mt-6 flex justify-end space-x-3">
+                    <button type="button" onclick="document.getElementById('nuevoPacienteModal').classList.add('hidden')" 
+                            class="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500">
+                        Cancelar
+                    </button>
+                    <button type="submit" 
+                            class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500">
+                        Guardar Paciente
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Ver Paciente -->
+    <div id="verPacienteModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
+        <div class="relative top-20 mx-auto p-5 border w-11/12 md:w-2/3 lg:w-1/2 shadow-lg rounded-md bg-white">
+            <div class="flex justify-between items-center pb-3 border-b">
+                <h3 class="text-xl font-semibold text-gray-800">Detalles del Paciente</h3>
+                <button onclick="cerrarModal('verPacienteModal')" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times text-2xl"></i>
+                </button>
+            </div>
+            
+            <div class="mt-4 space-y-4" id="detallesPaciente">
+                <!-- Los detalles del paciente se cargarán aquí dinámicamente -->
+            </div>
+            
+            <div class="mt-6 flex justify-end">
+                <button type="button" onclick="cerrarModal('verPacienteModal')" 
+                        class="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500">
+                    Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Editar Paciente -->
+    <div id="editarPacienteModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
+        <div class="relative top-20 mx-auto p-5 border w-11/12 md:w-2/3 lg:w-1/2 shadow-lg rounded-md bg-white">
+            <div class="flex justify-between items-center pb-3 border-b">
+                <h3 class="text-xl font-semibold text-gray-800">Editar Paciente</h3>
+                <button onclick="cerrarModal('editarPacienteModal')" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times text-2xl"></i>
+                </button>
+            </div>
+            
+            <form id="formEditarPaciente" action="" method="POST" class="space-y-4 mt-4">
+                <input type="hidden" id="editar_id" name="id">
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="editar_nombre" class="block text-sm font-medium text-gray-700">Nombre completo *</label>
+                        <input type="text" id="editar_nombre" name="nombre" required 
+                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring focus:ring-emerald-200 focus:ring-opacity-50">
+                    </div>
+                    <div>
+                        <label for="editar_email" class="block text-sm font-medium text-gray-700">Correo electrónico *</label>
+                        <input type="email" id="editar_email" name="email" required
+                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring focus:ring-emerald-200 focus:ring-opacity-50">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label for="editar_edad" class="block text-sm font-medium text-gray-700">Edad</label>
+                        <input type="number" id="editar_edad" name="edad" min="0" max="120"
+                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring focus:ring-emerald-200 focus:ring-opacity-50">
+                    </div>
+                    <div>
+                        <label for="editar_sexo" class="block text-sm font-medium text-gray-700">Sexo</label>
+                        <select id="editar_sexo" name="sexo" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring focus:ring-emerald-200 focus:ring-opacity-50">
+                            <option value="">Seleccionar...</option>
+                            <option value="Masculino">Masculino</option>
+                            <option value="Femenino">Femenino</option>
+                            <option value="Otro">Otro</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="editar_tipo_sangre" class="block text-sm font-medium text-gray-700">Tipo de sangre</label>
+                        <input type="text" id="editar_tipo_sangre" name="tipo_sangre"
+                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring focus:ring-emerald-200 focus:ring-opacity-50"
+                               placeholder="Ej: O+">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="editar_peso" class="block text-sm font-medium text-gray-700">Peso (kg)</label>
+                        <input type="number" id="editar_peso" name="peso" step="0.1" min="0"
+                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring focus:ring-emerald-200 focus:ring-opacity-50">
+                    </div>
+                    <div>
+                        <label for="editar_altura" class="block text-sm font-medium text-gray-700">Altura (cm)</label>
+                        <input type="number" id="editar_altura" name="altura" min="0"
+                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring focus:ring-emerald-200 focus:ring-opacity-50">
+                    </div>
+                </div>
+
+                <div>
+                    <label for="editar_alergias" class="block text-sm font-medium text-gray-700">Alergias</label>
+                    <textarea id="editar_alergias" name="alergias" rows="2"
+                             class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring focus:ring-emerald-200 focus:ring-opacity-50"></textarea>
+                </div>
+
+                <div>
+                    <label for="editar_enfermedades" class="block text-sm font-medium text-gray-700">Enfermedades crónicas</label>
+                    <textarea id="editar_enfermedades" name="enfermedades" rows="2"
+                             class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring focus:ring-emerald-200 focus:ring-opacity-50"></textarea>
+                </div>
+
+                <div class="mt-6 flex justify-end space-x-3">
+                    <button type="button" onclick="cerrarModal('editarPacienteModal')" 
+                            class="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500">
+                        Cancelar
+                    </button>
+                    <button type="submit" 
+                            class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500">
+                        Guardar Cambios
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Eliminar Paciente -->
+    <div id="eliminarPacienteModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
+        <div class="relative top-20 mx-auto p-5 border w-11/12 md:w-1/3 shadow-lg rounded-md bg-white">
+            <div class="flex justify-between items-center pb-3 border-b">
+                <h3 class="text-xl font-semibold text-gray-800">Confirmar Eliminación</h3>
+                <button onclick="cerrarModal('eliminarPacienteModal')" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times text-2xl"></i>
+                </button>
+            </div>
+            
+            <div class="mt-4">
+                <p class="text-gray-700">¿Estás seguro de que deseas eliminar a <span id="nombrePacienteEliminar" class="font-semibold"></span>?</p>
+                <p class="text-sm text-red-600 mt-2">Esta acción no se puede deshacer.</p>
+            </div>
+            
+            <div class="mt-6 flex justify-end space-x-3">
+                <button type="button" onclick="cerrarModal('eliminarPacienteModal')" 
+                        class="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500">
+                    Cancelar
+                </button>
+                <button type="button" id="confirmarEliminar" 
+                        class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                    Eliminar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Funciones para abrir y cerrar modales
+        function abrirModal(modalId) {
+            document.getElementById(modalId).classList.remove('hidden');
+            document.body.classList.add('overflow-hidden');
+        }
+
+        function cerrarModal(modalId) {
+            document.getElementById(modalId).classList.add('hidden');
+            document.body.classList.remove('overflow-hidden');
+        }
+
+        // Función para abrir el modal de nuevo paciente
+        function abrirModalNuevoPaciente() {
+            document.getElementById('nuevoPacienteModal').classList.remove('hidden');
+        }
+        
+        // Cerrar el modal al hacer clic fuera del contenido
+        document.addEventListener('DOMContentLoaded', function() {
+            const modal = document.getElementById('nuevoPacienteModal');
+            if (modal) {
+                modal.addEventListener('click', function(e) {
+                    if (e.target === this) {
+                        this.classList.add('hidden');
+                    }
+                });
+            }
+
+            // Manejar el envío del formulario con AJAX
+            const form = document.getElementById('formNuevoPaciente');
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    // Mostrar los datos del formulario en consola para depuración
+                    const formData = new FormData(this);
+                    const formObject = {};
+                    formData.forEach((value, key) => {
+                        formObject[key] = value;
+                        console.log(key + ': ' + value);
+                    });
+                    
+                    // Usar FormData directamente en lugar de convertir a JSON
+                    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
+                    
+                    // Crear un nuevo FormData para asegurar que los datos se envíen correctamente
+                    const formDataToSend = new FormData();
+                    formDataToSend.append('nombre', formObject.nombre || '');
+                    formDataToSend.append('email', formObject.email || '');
+                    formDataToSend.append('edad', formObject.edad || '');
+                    formDataToSend.append('genero', formObject.genero || '');
+                    formDataToSend.append('peso', formObject.peso || '');
+                    formDataToSend.append('altura', formObject.altura || '');
+                    formDataToSend.append('tipo_sangre', formObject.tipo_sangre || '');
+                    formDataToSend.append('alergias', formObject.alergias || '');
+                    formDataToSend.append('enfermedades', formObject.enfermedades || '');
+                    
+                    // Agregar el token CSRF si está presente
+                    if (csrfToken) {
+                        formDataToSend.append('csrf_token', csrfToken);
+                    }
+                    
+                    // Enviar los datos usando FormData directamente
+                    fetch(this.action, {
+                        method: 'POST',
+                        body: formDataToSend,
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        credentials: 'same-origin' // Asegura que las cookies se envíen con la solicitud
+                    })
+                    .then(async response => {
+                        const responseText = await response.text();
+                        console.log('Respuesta del servidor:', response.status, response.statusText, responseText);
                         
+                        if (!response.ok) {
+                            // Si la respuesta no es exitosa, intentar obtener el mensaje de error
+                            try {
+                                // Intentar analizar la respuesta como JSON
+                                const errorData = JSON.parse(responseText);
+                                const errorMessage = errorData.message || 
+                                                  errorData.error || 
+                                                  'Error desconocido del servidor';
+                                
+                                // Si hay errores de validación, mostrarlos
+                                if (errorData.errors) {
+                                    const validationErrors = Object.values(errorData.errors).join('\n');
+                                    return Promise.reject(`Error de validación:\n${validationErrors}`);
+                                }
+                                
+                                return Promise.reject(errorMessage);
+                            } catch (e) {
+                                // Si no se puede analizar como JSON, devolver el texto de respuesta
+                                return Promise.reject(responseText || `Error ${response.status}: ${response.statusText}`);
+                            }
+                        }
+                        
+                        // Si la respuesta es exitosa, intentar analizarla como JSON
+                        try {
+                            return JSON.parse(responseText);
+                        } catch (e) {
+                            console.error('Error al analizar la respuesta JSON:', e);
+                            return Promise.reject('Error al procesar la respuesta del servidor');
+                        }
+                    })
+                    .then(data => {
+                        if (data && data.success) {
+                            // Mostrar mensaje de éxito
+                            const successAlert = document.createElement('div');
+                            successAlert.className = 'bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4';
+                            successAlert.role = 'alert';
+                            successAlert.innerHTML = `
+                                <strong class="font-bold">¡Éxito!</strong>
+                                <span class="block sm:inline">${data.message || 'Paciente creado correctamente'}</span>
+                                <span class="absolute top-0 bottom-0 right-0 px-4 py-3">
+                                    <i class="fas fa-times cursor-pointer" onclick="this.parentElement.parentElement.remove()"></i>
+                                </span>
+                            `;
+                            
+                            // Insertar el mensaje antes del formulario
+                            this.parentNode.insertBefore(successAlert, this);
+                            
+                            // Cerrar el modal después de 2 segundos
+                            setTimeout(() => {
+                                const modal = document.getElementById('nuevoPacienteModal');
+                                if (modal) modal.classList.add('hidden');
+                                // Recargar la página para ver los cambios
+                                window.location.reload();
+                            }, 2000);
+                        } else {
+                            // Mostrar mensaje de error del servidor
+                            let errorMsg = 'Error al procesar la solicitud';
+                            let errorDetails = '';
+                            
+                            if (data) {
+                                if (typeof data === 'string') {
+                                    errorMsg = data;
+                                } else if (data.message) {
+                                    errorMsg = data.message;
+                                } else if (data.error) {
+                                    errorMsg = data.error;
+                                } else if (data.errors) {
+                                    errorDetails = Object.values(data.errors).join('\n');
+                                }
+                            }
+                            
+                            console.error('Error en la respuesta:', data);
+                            throw new Error(`${errorMsg}\n${errorDetails}`);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error en la petición:', {
+                            message: error.message,
+                            name: error.name,
+                            stack: error.stack,
+                            response: error.response
+                        });
+                        
+                        // Mostrar el error en la consola para depuración
+                        if (error.response) {
+                            console.error('Respuesta del servidor:', error.response);
+                        }
+                        
+                        // Mostrar mensaje de error detallado
+                        const errorAlert = document.createElement('div');
+                        errorAlert.className = 'bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4';
+                        errorAlert.role = 'alert';
+                        errorAlert.innerHTML = `
+                            <strong class="font-bold">¡Error!</strong>
+                            <span class="block sm:inline">${error.message || 'Error al intentar crear el paciente. Verifica los datos e inténtalo de nuevo.'}</span>
+                            <span class="absolute top-0 bottom-0 right-0 px-4 py-3">
+                                <i class="fas fa-times cursor-pointer" onclick="this.parentElement.parentElement.remove()"></i>
+                            </span>
+                            <div class="mt-2 text-sm text-red-600">
+                                Si el problema persiste, por favor contacta al soporte técnico.
+                            </div>
+                        `;
+                        
+                        // Insertar el mensaje antes del formulario
+                        const formContainer = document.querySelector('#nuevoPacienteModal .bg-white');
+                        if (formContainer) {
+                            formContainer.insertBefore(errorAlert, formContainer.firstChild);
+                        } else {
+                            this.parentNode.insertBefore(errorAlert, this);
+                        }
+                        
+                        // Hacer scroll hasta el mensaje de error
+                        errorAlert.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    });
+                });
+            }
+        });
+    </script>
+{{ ... }}
     </div>
 </body>
 </html>
-=======
-   <div class="w-[1440px] h-[900px] relative bg-white overflow-hidden">
-  <img class="w-5 h-5 left-[1139px] top-[85px] absolute" src="https://placehold.co/20x20" />
-  <img class="w-5 h-5 left-[1239px] top-[85px] absolute" src="https://placehold.co/20x20" />
-  <img class="w-5 h-5 left-[1189px] top-[85px] absolute" src="https://placehold.co/20x20" />
-  <div class="left-[165px] top-[78px] absolute text-center justify-start text-black text-xl font-normal font-['Baloo_Chettan']">Home</div>
-  <div class="left-[265px] top-[78px] absolute text-center justify-start text-black text-xl font-normal font-['Baloo_Chettan']">Tienda</div>
-  <div class="left-[369px] top-[78px] absolute text-center justify-start text-black text-xl font-normal font-['Baloo_Chettan']">Servicios</div>
-  <div class="left-[496px] top-[80px] absolute text-center justify-start text-black text-xl font-normal font-['Baloo_Chettan']">Página</div>
-  <div class="w-8 h-0 left-[396px] top-[115px] absolute shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] outline outline-4 outline-offset-[-2px] outline-neutral-500"></div>
-  <div class="w-[1309px] h-0 left-[30px] top-[134px] absolute outline outline-2 outline-offset-[-1px] outline-stone-400/90"></div>
-  <div class="left-[97px] top-[321px] absolute text-center justify-start text-black text-xl font-bold font-['Roboto']">FILTRO SELECCIONADO</div>
-  <div class="w-28 h-5 left-[109px] top-[422px] absolute text-center justify-start text-teal-700 text-xl font-bold font-['Roboto']">Categoría</div>
-  <div class="left-[176px] top-[486px] absolute text-center justify-start text-stone-500/90 text-xl font-bold font-['Roboto']">Hospedaje</div>
-  <div class="w-6 h-6 left-[127px] top-[485px] absolute bg-zinc-700 border border-zinc-700"></div>
-  <div class="w-64 h-80 left-[84px] top-[379px] absolute bg-stone-300/0 rounded-[10px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] border border-black"></div>
-  <div class="w-[907px] h-32 left-[396px] top-[172px] absolute bg-emerald-300/80 rounded-[20px]"></div>
-  <div class="w-[464px] h-16 left-[613px] top-[208px] absolute text-center justify-start text-black text-4xl font-bold font-['Roboto']">SERVICIOS</div>
-  <div class="w-72 h-96 left-[1008px] top-[337px] absolute bg-stone-300/30 rounded-[10px]"></div>
-  <div class="w-44 h-10 left-[1061px] top-[668px] absolute bg-teal-700 rounded-2xl"></div>
-  <div class="left-[1100px] top-[677px] absolute text-center justify-start text-white text-xl font-bold font-['Roboto']">COMPRAR</div>
-  <div class="left-[1111px] top-[608px] absolute text-center justify-start text-zinc-700 text-lg font-bold font-['Roboto']">Full Day<br/>S/. 70.00</div>
-  <img class="w-48 h-48 left-[1049px] top-[379px] absolute" src="https://placehold.co/199x199" />
-  <div class="w-72 h-96 left-[710px] top-[337px] absolute bg-stone-300/30 rounded-[10px]"></div>
-  <div class="w-44 h-10 left-[763px] top-[668px] absolute bg-teal-700 rounded-2xl"></div>
-  <div class="left-[802px] top-[677px] absolute text-center justify-start text-white text-xl font-bold font-['Roboto']">COMPRAR</div>
-  <div class="left-[768px] top-[608px] absolute text-center justify-start text-zinc-700 text-lg font-bold font-['Roboto']">Hospedaje Premium<br/>S/. 70.00</div>
-  <img class="w-48 h-48 left-[751px] top-[379px] absolute" src="https://placehold.co/199x199" />
-  <div class="w-72 h-96 left-[412px] top-[337px] absolute bg-stone-300/30 rounded-[10px]"></div>
-  <div class="w-44 h-10 left-[465px] top-[668px] absolute bg-teal-700 rounded-2xl"></div>
-  <div class="w-24 left-[504px] top-[677px] absolute text-center justify-start text-white text-xl font-bold font-['Roboto']">COMPRAR</div>
-  <div class="w-36 left-[477px] top-[608px] absolute text-center justify-start text-zinc-700 text-lg font-bold font-['Roboto']">Hospedaje Clásico<br/>S/. 40.00</div>
-  <img class="w-48 h-48 left-[453px] top-[379px] absolute" src="https://placehold.co/198x198" />
-  <div class="left-[176px] top-[541px] absolute text-center justify-start text-stone-500/90 text-xl font-bold font-['Roboto']">Baños</div>
-  <div class="w-6 h-6 left-[127px] top-[538px] absolute bg-stone-300 border border-black"></div>
-</div>
->>>>>>> Stashed changes
