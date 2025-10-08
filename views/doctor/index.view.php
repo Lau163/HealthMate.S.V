@@ -56,7 +56,6 @@
     </script>
 </head>
 <body class="bg-gray-100 overflow-hidden">
-<<<<<<< Updated upstream
     <div class="flex h-screen w-full">
         <!-- Sidebar -->
         <div id="sidebar" class="bg-white shadow-lg w-64 h-full transition-all duration-300 ease-in-out z-50 fixed md:relative flex-shrink-0">
@@ -70,46 +69,8 @@
                 </button>
             </div>
             
-            <!-- Navigation -->
-            <nav class="mt-8">
-                <div class="px-2 space-y-1">
-                    <!-- Dashboard -->
-                    <a href="#" class="sidebar-item flex items-center px-6 py-3 text-sm font-medium rounded-md text-emerald-600 bg-emerald-50">
-                        <i class="fas fa-home text-lg"></i>
-                        <span class="sidebar-text ml-3 hidden md:inline-block">Inicio</span>
-                    </a>
-                    
-                    <!-- Doctor -->
-                    <a href="#" class="sidebar-item flex items-center px-6 py-3 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-50">
-                        <i class="fas fa-users text-lg"></i>
-                        <span class="sidebar-text ml-3 hidden md:inline-block">Doctor</span>
-                    </a>
-                    
-                    <!-- Reservas -->
-                    <a href="#" class="sidebar-item flex items-center px-6 py-3 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-50">
-                        <i class="far fa-calendar-alt text-lg"></i>
-                        <span class="sidebar-text ml-3 hidden md:inline-block">Reservas</span>
-                    </a>
-                    
-                    <!-- Servicios -->
-                    <a href="#" class="sidebar-item flex items-center px-6 py-3 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-50">
-                        <i class="fas fa-concierge-bell text-lg"></i>
-                        <span class="sidebar-text ml-3 hidden md:inline-block">Servicios</span>
-                    </a>
-                    
-                    <!-- Mascotas -->
-                    <a href="#" class="sidebar-item flex items-center px-6 py-3 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-50">
-                        <i class="fas fa-paw text-lg"></i>
-                        <span class="sidebar-text ml-3 hidden md:inline-block">Mascotas</span>
-                    </a>
-                    
-                    <!-- Reportes -->
-                    <a href="#" class="sidebar-item flex items-center px-6 py-3 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-50">
-                        <i class="fas fa-chart-bar text-lg"></i>
-                        <span class="sidebar-text ml-3 hidden md:inline-block">Reportes</span>
-                    </a>
-                </div>
-            </nav>
+          <?php include('navbar.view.php') ?>
+  
         </div>
         
         <!-- Main Content -->
@@ -357,39 +318,3 @@
     </div>
 </body>
 </html>
-=======
-   <div class="w-[1440px] h-[900px] relative bg-white overflow-hidden">
-  <img class="w-5 h-5 left-[1139px] top-[85px] absolute" src="https://placehold.co/20x20" />
-  <img class="w-5 h-5 left-[1239px] top-[85px] absolute" src="https://placehold.co/20x20" />
-  <img class="w-5 h-5 left-[1189px] top-[85px] absolute" src="https://placehold.co/20x20" />
-  <div class="left-[165px] top-[78px] absolute text-center justify-start text-black text-xl font-normal font-['Baloo_Chettan']">Home</div>
-  <div class="left-[265px] top-[78px] absolute text-center justify-start text-black text-xl font-normal font-['Baloo_Chettan']">Tienda</div>
-  <div class="left-[369px] top-[78px] absolute text-center justify-start text-black text-xl font-normal font-['Baloo_Chettan']">Servicios</div>
-  <div class="left-[496px] top-[80px] absolute text-center justify-start text-black text-xl font-normal font-['Baloo_Chettan']">Página</div>
-  <div class="w-8 h-0 left-[396px] top-[115px] absolute shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] outline outline-4 outline-offset-[-2px] outline-neutral-500"></div>
-  <div class="w-[1309px] h-0 left-[30px] top-[134px] absolute outline outline-2 outline-offset-[-1px] outline-stone-400/90"></div>
-  <div class="left-[97px] top-[321px] absolute text-center justify-start text-black text-xl font-bold font-['Roboto']">FILTRO SELECCIONADO</div>
-  <div class="w-28 h-5 left-[109px] top-[422px] absolute text-center justify-start text-teal-700 text-xl font-bold font-['Roboto']">Categoría</div>
-  <div class="w-6 h-6 left-[127px] top-[485px] absolute bg-zinc-700 border border-zinc-700"></div>
-  <div class="w-64 h-80 left-[84px] top-[379px] absolute bg-stone-300/0 rounded-[10px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] border border-black"></div>
-  <div class="w-44 h-24 left-[147px] top-[526px] absolute text-center justify-start text-stone-500/90 text-xl font-bold font-['Roboto']">Este sistema esta diseñado para que puedas llevar el control de tus signoss vitales</div>
-  <div class="w-[907px] h-32 left-[396px] top-[172px] absolute bg-emerald-300/80 rounded-[20px]"></div>
-  <div class="w-[464px] h-16 left-[613px] top-[208px] absolute text-center justify-start text-black text-4xl font-bold font-['Roboto']">Bienvenido a Healt Mate</div>
-  <div class="w-72 h-96 left-[1008px] top-[337px] absolute bg-stone-300/30 rounded-[10px]"></div>
-  <div class="w-44 h-10 left-[1061px] top-[668px] absolute bg-teal-700 rounded-2xl"></div>
-  <div class="left-[1100px] top-[677px] absolute text-center justify-start text-white text-xl font-bold font-['Roboto']">COMPRAR</div>
-  <div class="w-36 left-[1081px] top-[604px] absolute text-center justify-start text-zinc-700 text-lg font-bold font-['Roboto']">Alimentate Sanamente</div>
-  <div class="w-72 h-96 left-[710px] top-[337px] absolute bg-stone-300/30 rounded-[10px]"></div>
-  <div class="w-44 h-10 left-[763px] top-[668px] absolute bg-teal-700 rounded-2xl"></div>
-  <div class="left-[802px] top-[677px] absolute text-center justify-start text-white text-xl font-bold font-['Roboto']">COMPRAR</div>
-  <div class="w-48 left-[758px] top-[608px] absolute text-center justify-start text-zinc-700 text-lg font-bold font-['Roboto']">Parametros De Los Signos Vitales</div>
-  <div class="w-72 h-96 left-[412px] top-[337px] absolute bg-stone-300/30 rounded-[10px]"></div>
-  <div class="w-44 h-10 left-[465px] top-[668px] absolute bg-teal-700 rounded-2xl"></div>
-  <div class="w-24 left-[504px] top-[677px] absolute text-center justify-start text-white text-xl font-bold font-['Roboto']">COMPRAR</div>
-  <div class="w-36 left-[477px] top-[608px] absolute text-center justify-start text-zinc-700 text-lg font-bold font-['Roboto']">Mantente Hidratado</div>
-  <img class="w-40 h-40 left-[444px] top-[396px] absolute" src="https://placehold.co/157x157" />
-  <img class="w-24 h-24 left-[570px] top-[379px] absolute" src="https://placehold.co/96x96" />
-  <img class="w-52 h-52 left-[1039px] top-[379px] absolute" src="https://placehold.co/210x210" />
-  <img class="w-52 h-52 left-[758px] top-[379px] absolute" src="https://placehold.co/210x210" />
-</div>
->>>>>>> Stashed changes

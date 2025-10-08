@@ -45,6 +45,11 @@
                    class="text-black hover:text-teal-700 text-lg font-normal font-['Baloo_Chettan'] transition-colors">
                     Perfil
                 </a>
+                <!-- Botón de Cerrar Sesión -->
+                <a href="#" onclick="confirmarLogout()"
+                   class="bg-red-600 hover:bg-red-700 text-white text-lg font-bold font-['Baloo_Chettan'] px-4 py-2 rounded-lg transition-colors shadow-md">
+                    <i class="fas fa-sign-out-alt mr-2"></i>Cerrar Sesión
+                </a>
             </div>
             
             <!-- User icons (Desktop) -->
@@ -93,6 +98,11 @@
                    class="text-black hover:text-teal-700 text-base font-normal font-['Baloo_Chettan'] py-2 border-b border-gray-200">
                     Perfil
                 </a>
+                <!-- Botón de Cerrar Sesión - Móvil -->
+                <a href="#" onclick="confirmarLogout()"
+                   class="bg-red-600 hover:bg-red-700 text-white text-base font-bold font-['Baloo_Chettan'] py-3 px-4 rounded-lg transition-colors shadow-md text-center border-t border-gray-300 mt-3">
+                    <i class="fas fa-sign-out-alt mr-2"></i>Cerrar Sesión
+                </a>
             </div>
         </div>
         
@@ -105,4 +115,16 @@
         const mobileMenu = document.getElementById('mobile-menu');
         mobileMenu.classList.toggle('hidden');
     });
+
+    // Función para confirmar cierre de sesión
+    function confirmarLogout() {
+        if (confirm('¿Estás seguro de que quieres cerrar sesión?')) {
+            // Crear un formulario temporal para enviar datos POST si es necesario
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '<?= constant("URL") ?>login/logout';
+            document.body.appendChild(form);
+            form.submit();
+        }
+    }
 </script>
