@@ -9,19 +9,141 @@ class UsuarioModel extends ModelBase {
     }
     
     /**
-     * Busca un usuario por su email con información del rol
+     * Busca un usuario por su correo electrónico con información del rol
+     * @param string $email Correo electrónico a buscar
+     * @param bool $conRol Si es true, incluye información del rol
+     * @return array|false Datos del usuario o false si no se encuentra
      */
-    public function buscarPorEmail($email) {
-        $query = "SELECT u.*, r.Nombre_Rol as Rol 
-                 FROM {$this->table} u
-                 JOIN roles r ON u.Id_Rol = r.Id_Rol
-                 WHERE u.Email = :email AND u.Activo = 1";
-        
-        $stmt = $this->con->pdo->prepare($query);
-        $stmt->bindParam(':email', $email);
-        $stmt->execute();
-        
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+    public function buscarPorEmail($email, $conRol = false, $soloActivos = true) {
+        try {
+            $query = "SELECT u.*";
+            
+            if ($conRol) {
+                $query .= ", r.Nombre_Rol as Rol 
+                          FROM {$this->table} u
+                          JOIN roles r ON u.Id_Rol = r.Id_Rol";
+            } else {
+                $query .= " FROM {$this->table} u";
+            }
+            
+            $query .= " WHERE u.Email = :email";
+            
+            // Si solo se buscan usuarios activos, agregar la condición
+            if ($soloActivos) {
+                $query .= " AND u.Activo = 1";
+            }
+            
+            $stmt = $this->con->pdo->prepare($query);
+            $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+            $stmt->execute();
+            
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Error en UsuarioModel->buscarPorEmail(): " . $e->getMessage());
+            return false;
+        }
+    }
+    
+    /**
+     * Crea un nuevo registro en la base de datos
+     * @param array $data Datos a insertar
+     * @return int|bool ID del nuevo registro o false en caso de error
+     */
+    public function create($data) {
+        try {
+            // Filtrar los datos para incluir solo las columnas que existen en la tabla
+            $columns = [];
+            $placeholders = [];
+            $values = [];
+            
+            // Obtener las columnas de la tabla
+            $stmt = $this->con->pdo->query("DESCRIBE {$this->table}");
+            $tableColumns = $stmt->fetchAll(PDO::FETCH_COLUMN);
+            
+            // Preparar los datos para la inserción
+            foreach ($data as $key => $value) {
+                if (in_array($key, $tableColumns)) {
+                    $columns[] = $key;
+                    $placeholders[] = ":$key";
+                    $values[":$key"] = $value;
+                }
+            }
+            
+            if (empty($columns)) {
+                throw new Exception("No se proporcionaron datos válidos para la inserción");
+            }
+            
+            // Construir la consulta SQL
+            $sql = "INSERT INTO {$this->table} (" . implode(', ', $columns) . ") 
+                    VALUES (" . implode(', ', $placeholders) . ")";
+            
+            $stmt = $this->con->pdo->prepare($sql);
+            
+            // Ejecutar la consulta
+            if ($stmt->execute($values)) {
+                return $this->con->pdo->lastInsertId();
+            }
+            
+            return false;
+            
+        } catch (PDOException $e) {
+            error_log("Error en UsuarioModel->create(): " . $e->getMessage());
+            return false;
+        } catch (Exception $e) {
+            error_log("Error en UsuarioModel->create(): " . $e->getMessage());
+            return false;
+        }
+    }
+    
+    /**
+     * Actualiza los datos de un usuario existente
+     * @param int $id ID del usuario a actualizar
+     * @param array $datos Datos a actualizar
+     * @return bool|int ID del usuario actualizado o false en caso de error
+     */
+    public function actualizar($id, $datos) {
+        try {
+            // Obtener las columnas de la tabla
+            $stmt = $this->con->pdo->query("DESCRIBE {$this->table}");
+            $columnas = $stmt->fetchAll(PDO::FETCH_COLUMN);
+            
+            // Filtrar los datos para incluir solo las columnas que existen en la tabla
+            $datosFiltrados = array_intersect_key($datos, array_flip($columnas));
+            
+            if (empty($datosFiltrados)) {
+                return false;
+            }
+            
+            // Construir la consulta SQL
+            $setPart = [];
+            $valores = [':id' => $id];
+            
+            foreach ($datosFiltrados as $campo => $valor) {
+                // No actualizar el ID
+                if ($campo === 'Id_Usuario') {
+                    continue;
+                }
+                
+                $param = ":$campo";
+                $setPart[] = "`$campo` = $param";
+                $valores[$param] = $valor;
+            }
+            
+            if (empty($setPart)) {
+                return false;
+            }
+            
+            $query = "UPDATE {$this->table} SET " . implode(', ', $setPart) . " WHERE Id_Usuario = :id";
+            
+            $stmt = $this->con->pdo->prepare($query);
+            $resultado = $stmt->execute($valores);
+            
+            return $resultado ? $id : false;
+            
+        } catch (PDOException $e) {
+            error_log("Error en UsuarioModel->actualizar(): " . $e->getMessage());
+            return false;
+        }
     }
     
     /**

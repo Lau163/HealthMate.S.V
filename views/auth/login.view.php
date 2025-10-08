@@ -60,12 +60,13 @@ require_once __DIR__ . '/../layouts/header.php';
                                        data-bs-toggle="tooltip" 
                                        data-bs-placement="top" 
                                        title="La contraseña debe tener al menos 8 caracteres">
-                                <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                                <button class="btn btn-outline-secondary" type="button" id="togglePassword" onclick="togglePasswordVisibility()">
                                     <i class="fas fa-eye"></i>
                                 </button>
                                 <div class="invalid-feedback">
                                     La contraseña es obligatoria.
                                 </div>
+                            </div>
                         
                         <!-- Remember Me & Forgot Password -->
                         <div class="flex items-center justify-between mb-6">
@@ -103,7 +104,8 @@ require_once __DIR__ . '/../layouts/header.php';
             
             <div class="text-center mt-3">
                 <small class="text-muted">
-                    Al iniciar sesión, aceptas nuestros 
+                    Al iniciar sesión, aceptas nuestros <a href="/terminos" class="text-primary">Términos de Servicio</a> y <a href="/privacidad" class="text-primary">Política de Privacidad</a>
+                </small>
                     <a href="/terminos" class="text-decoration-none">Términos de Servicio</a> y 
                     <a href="/privacidad" class="text-decoration-none">Política de Privacidad</a>.
             </div>
@@ -111,8 +113,41 @@ require_once __DIR__ . '/../layouts/header.php';
     </div>
 
     <script>
-    // Mostrar/ocultar contraseña
+    // Función para alternar la visibilidad de la contraseña
+    function togglePasswordVisibility() {
+        const passwordInput = document.getElementById('password');
+        const toggleButton = document.getElementById('togglePassword');
+        
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            toggleButton.innerHTML = '<i class="fas fa-eye-slash"></i>';
+            toggleButton.setAttribute('title', 'Ocultar contraseña');
+        } else {
+            passwordInput.type = 'password';
+            toggleButton.innerHTML = '<i class="fas fa-eye"></i>';
+            toggleButton.setAttribute('title', 'Mostrar contraseña');
+        }
+    }
+    
+    // Inicialización de tooltips
     document.addEventListener('DOMContentLoaded', function() {
+        // Inicializar tooltips de Bootstrap
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+        
+        // Manejar el envío del formulario
+        const form = document.getElementById('loginForm');
+        if (form) {
+            form.addEventListener('submit', function(event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        }
         const togglePassword = document.getElementById('togglePassword');
         if (togglePassword) {
  

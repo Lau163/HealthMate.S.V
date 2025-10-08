@@ -5,9 +5,14 @@ class Auth extends ControllerBase {
     
     public function __construct() {
         parent::__construct();
-        // Cargar el modelo de usuario según la convención inicial
-        $this->loadModel('usuario');
-        $this->usuarioModel = $this->model; // instancia de UsuarioModel
+        
+        // Cargar el modelo de usuario usando el método loadModel actualizado
+        $this->usuarioModel = $this->loadModel('usuario');
+        
+        // Verificar que el modelo se cargó correctamente
+        if (!$this->usuarioModel) {
+            error_log('Error: No se pudo cargar el modelo de usuario en Auth');
+        }
     }
     
     /**
@@ -191,11 +196,21 @@ class Auth extends ControllerBase {
 
             error_log("Autenticación exitosa para: " . $email);
             
-            // Crear sesión
-            $this->usuarioModel->crearSesion($usuario);
+            // Obtener los roles del usuario para asegurarnos de que tenemos todos los datos necesarios
+            $usuarioConRol = $this->usuarioModel->buscarPorEmail($email, true);
+            
+            if (!$usuarioConRol || !isset($usuarioConRol['Id_Usuario'])) {
+                throw new Exception('Error al obtener los datos del usuario. Por favor, inténtalo de nuevo.');
+            }
+            
+            // Asegurarse de que el array de usuario tenga los campos necesarios
+            $datosUsuario = array_merge($usuario, $usuarioConRol);
+            
+            // Crear sesión con los datos completos del usuario
+            $this->usuarioModel->crearSesion($datosUsuario);
             
             // Actualizar último acceso
-            $this->usuarioModel->actualizarUltimoAcceso($usuario['Id_Usuario']);
+            $this->usuarioModel->actualizarUltimoAcceso($datosUsuario['Id_Usuario']);
 
             // Redirigir a la selección de roles
             $this->seleccionarRol();
@@ -315,49 +330,91 @@ class Auth extends ControllerBase {
             header('Location: ' . BASE_URL . 'auth/register');
             exit;
         }
+        
+        session_destroy();
+        
+        // Redirigir al inicio de sesión
+        header('Location: ' . BASE_URL . 'auth');
+        exit();
     }
 
     public function logout() {
-        // Limpiar el buffer de salida
-        if (ob_get_level()) {
+        // Limpiar cualquier buffer de salida primero
+        if (ob_get_level() > 0) {
             ob_end_clean();
         }
+        
+        // Configurar encabezados para evitar caché ANTES de cualquier salida
+        header_remove('Pragma');
+        header_remove('Expires');
+        header_remove('Cache-Control');
+        
+        header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0, post-check=0, pre-check=0');
+        header('Pragma: no-cache');
+        header('Expires: Thu, 19 Nov 1981 08:52:00 GMT');
         
         // Iniciar sesión si no está iniciada
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
         
+        // Registrar la acción de cierre de sesión
+        $usuarioId = $_SESSION['usuario_id'] ?? 'No identificado';
+        error_log('Iniciando proceso de cierre de sesión para el usuario: ' . $usuarioId);
+        
         // Limpiar todas las variables de sesión
         $_SESSION = [];
         
-        // Eliminar la cookie de sesión
+        // Si se desea destruir la sesión completamente, borra también la cookie de sesión
         if (ini_get("session.use_cookies")) {
             $params = session_get_cookie_params();
-            setcookie(session_name(), '', time() - 42000,
-                $params["path"], $params["domain"],
-                $params["secure"], $params["httponly"]
+            setcookie(
+                session_name(), 
+                '', 
+                [
+                    'expires' => time() - 3600,
+                    'path' => $params["path"],
+                    'domain' => $params["domain"],
+                    'secure' => $params["secure"],
+                    'httponly' => $params["httponly"],
+                    'samesite' => 'Lax'
+                ]
             );
         }
         
         // Destruir la sesión
-        session_destroy();
+        if (session_destroy()) {
+            error_log('Sesión destruida correctamente para el usuario: ' . $usuarioId);
+        } else {
+            error_log('Error al destruir la sesión para el usuario: ' . $usuarioId);
+        }
         
-        // URL de login absoluta
-        $loginUrl = 'http://' . $_SERVER['HTTP_HOST'] . '/HealthMate.S.V/auth/login';
+        // Redirigir a la página de inicio con un parámetro para forzar recarga
+        // Usar JavaScript para forzar la recarga de la caché
+        $redirectUrl = BASE_URL . '?logout=' . time();
         
-        // Redirección directa con JavaScript
+        // Enviar encabezados adicionales
+        header('X-Frame-Options: DENY');
+        header('X-Content-Type-Options: nosniff');
+        
+        // Redirigir con JavaScript para asegurar que no se use la caché
         echo '<!DOCTYPE html>
         <html>
         <head>
-            <title>Redirigiendo al login...</title>
+            <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+            <meta http-equiv="Pragma" content="no-cache" />
+            <meta http-equiv="Expires" content="0" />
             <script>
-                // Redirigir inmediatamente
-                window.location.href = "' . $loginUrl . '";
+                // Forzar recarga sin caché
+                window.location.replace("' . htmlspecialchars($redirectUrl, ENT_QUOTES, 'UTF-8') . '");
+                // Limpiar el historial de navegación
+                if (window.history) {
+                    window.history.replaceState(null, null, "' . htmlspecialchars($redirectUrl, ENT_QUOTES, 'UTF-8') . '");
+                }
             </script>
         </head>
         <body>
-            <p>Redirigiendo al login... <a href="' . $loginUrl . '">Haz clic aquí si no eres redirigido</a>.</p>
+            <p>Cerrando sesión... <a href="' . htmlspecialchars($redirectUrl, ENT_QUOTES, 'UTF-8') . '">Continuar</a></p>
         </body>
         </html>';
         exit;

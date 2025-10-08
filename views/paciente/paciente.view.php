@@ -11,10 +11,14 @@ unset($_SESSION['success']);
 <div class="container mt-4">
   <div class="d-flex justify-content-between align-items-center mb-3">
     <h2 class="mb-0">Pacientes</h2>
-    <form class="d-flex" method="get" action="">
-      <input class="form-control me-2" type="search" name="q" placeholder="Buscar por nombre o email" value="<?php echo htmlspecialchars($_GET['q'] ?? ''); ?>">
-      <button class="btn btn-outline-primary" type="submit">Buscar</button>
-    </form>
+    <div class="d-flex">
+      <form class="d-flex me-2" method="get" action="">
+        <input class="form-control me-2" type="search" name="q" placeholder="Buscar por nombre o email" value="<?php echo htmlspecialchars($_GET['q'] ?? ''); ?>">
+        <button class="btn btn-outline-primary" type="submit">Buscar</button>
+      </form>
+      <a href="<?php echo BASE_URL; ?>paciente/nuevo" class="btn btn-success">
+        <i class="fas fa-plus me-1"></i> Nuevo Paciente
+      </a>
   </div>
 
   <?php if ($error): ?>

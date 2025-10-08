@@ -8,6 +8,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>HealthMate - Iniciar Sesión</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         /* ...existing code... */
@@ -96,14 +97,28 @@
     </div>
     <!-- Password -->
     <div class="relative mb-6">
-        <input type="password" id="password" name="password" placeholder=" " class="w-full pl-4 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-200 focus:border-teal-500" required>
-        <label for="password_login" class="input-floating-label">Contraseña</label>
+        <div class="relative">
+            <input type="password" id="password" name="password" placeholder=" " class="w-full pl-4 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-200 focus:border-teal-500" required>
+            <label for="password" class="input-floating-label">Contraseña</label>
+            <button type="button" id="togglePassword" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-teal-700 focus:outline-none" onclick="togglePasswordVisibility()">
+                <i class="fas fa-eye"></i>
+            </button>
+        </div>
     </div>
     <button type="submit" class="w-full bg-teal-700 hover:bg-teal-800 text-white font-bold py-3 px-4 rounded-lg btn-login focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-opacity-50 transition duration-200 transform active:scale-95">
         Ingresar
     </button>
-    <div class="text-center mt-4">
-        <a href="#" class="text-sm text-teal-700 hover:underline">¿Olvidaste tu contraseña?</a>
+    
+    <!-- Términos y condiciones -->
+    <div class="text-center mt-4 text-sm text-gray-600">
+        <p>Al iniciar sesión, aceptas nuestros 
+            <a href="/terminos" class="text-teal-600 hover:text-teal-700 font-medium">Términos de Servicio</a> y 
+            <a href="/privacidad" class="text-teal-600 hover:text-teal-700 font-medium">Política de Privacidad</a>
+        </p>
+    </div>
+    
+    <div class="text-center mt-2">
+        <a href="/auth/recuperar" class="text-sm text-teal-700 hover:underline">¿Olvidaste tu contraseña?</a>
     </div>
 </form>
 
@@ -183,6 +198,48 @@
 </div>
 
 <script>
+    // Función para alternar la visibilidad de la contraseña
+    function togglePasswordVisibility() {
+        const passwordInput = document.getElementById('password');
+        const toggleButton = document.getElementById('togglePassword');
+        const icon = toggleButton.querySelector('i');
+        
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+            toggleButton.setAttribute('title', 'Ocultar contraseña');
+            toggleButton.setAttribute('aria-label', 'Ocultar contraseña');
+        } else {
+            passwordInput.type = 'password';
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+            toggleButton.setAttribute('title', 'Mostrar contraseña');
+            toggleButton.setAttribute('aria-label', 'Mostrar contraseña');
+        }
+    }
+    
+    // Inicialización de tooltips
+    document.addEventListener('DOMContentLoaded', function() {
+        // Inicializar tooltips
+        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+        
+        // Manejar el envío del formulario
+        const form = document.getElementById('login-tab');
+        if (form) {
+            form.addEventListener('submit', function(event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        }
+    });
+
     // Función para cambiar de pestaña
     function switchTab(tabName) {
         // Actualizar botones
