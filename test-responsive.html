@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>Test Responsive | HealthMate</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Asegurar que el viewport se respete en móviles */
+        * {
+            box-sizing: border-box;
+        }
+        
+        html, body {
+            overflow-x: hidden;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        
+        /* Prevenir scroll horizontal */
+        body {
+            position: relative;
+        }
+        
+        /* Indicador de breakpoint para debugging */
+        .debug-breakpoint {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            z-index: 9999;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen w-full">
+    <!-- Indicador de breakpoint -->
+    <div class="debug-breakpoint">
+        <span class="sm:hidden">XS (< 640px)</span>
+        <span class="hidden sm:inline md:hidden">SM (≥ 640px)</span>
+        <span class="hidden md:inline lg:hidden">MD (≥ 768px)</span>
+        <span class="hidden lg:inline xl:hidden">LG (≥ 1024px)</span>
+        <span class="hidden xl:inline">XL (≥ 1280px)</span>
+    </div>
+    
+    <!-- Container principal responsive -->
+    <div class="w-full min-h-screen bg-white overflow-x-hidden">
+        
+        <!-- Navbar responsive -->
+        <nav class="bg-white border-b-2 border-stone-400/90 shadow-sm">
+            <div class="container mx-auto px-4">
+                <div class="flex items-center justify-between py-4">
+                    
+                    <!-- Logo/Brand -->
+                    <div class="flex items-center">
+                        <h2 class="text-xl md:text-2xl font-bold text-teal-700">HealthMate</h2>
+                    </div>
+                    
+                    <!-- Mobile menu button -->
+                    <button id="mobile-menu-button" class="lg:hidden text-black focus:outline-none">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                    
+                    <!-- Desktop Navigation -->
+                    <div class="hidden lg:flex items-center space-x-6">
+                        <a href="#" class="text-black hover:text-teal-700 text-lg transition-colors">Home</a>
+                        <a href="#" class="text-black hover:text-teal-700 text-lg transition-colors">Signos Vitales</a>
+                        <a href="#" class="text-black hover:text-teal-700 text-lg transition-colors">Servicios</a>
+                        <a href="#" class="text-black hover:text-teal-700 text-lg transition-colors">Gráficas</a>
+                        <a href="#" class="text-black hover:text-teal-700 text-lg transition-colors">Archivo</a>
+                        <a href="#" class="text-black hover:text-teal-700 text-lg transition-colors">Consejos</a>
+                        <a href="#" class="text-black hover:text-teal-700 text-lg transition-colors">Perfil</a>
+                    </div>
+                    
+                    <!-- User icons (Desktop) -->
+                    <div class="hidden lg:flex items-center space-x-4">
+                        <button class="w-5 h-5">
+                            <i class="fas fa-bell"></i>
+                        </button>
+                        <button class="w-5 h-5">
+                            <i class="fas fa-envelope"></i>
+                        </button>
+                        <button class="w-5 h-5">
+                            <i class="fas fa-user"></i>
+                        </button>
+                    </div>
+                    
+                </div>
+                
+                <!-- Mobile Navigation Menu -->
+                <div id="mobile-menu" class="hidden lg:hidden pb-4">
+                    <div class="flex flex-col space-y-3">
+                        <a href="#" class="text-black hover:text-teal-700 text-base py-2 border-b border-gray-200">Home</a>
+                        <a href="#" class="text-black hover:text-teal-700 text-base py-2 border-b border-gray-200">Signos Vitales</a>
+                        <a href="#" class="text-black hover:text-teal-700 text-base py-2 border-b border-gray-200">Servicios</a>
+                        <a href="#" class="text-black hover:text-teal-700 text-base py-2 border-b border-gray-200">Gráficas</a>
+                        <a href="#" class="text-black hover:text-teal-700 text-base py-2 border-b border-gray-200">Archivo</a>
+                        <a href="#" class="text-black hover:text-teal-700 text-base py-2 border-b border-gray-200">Consejos</a>
+                        <a href="#" class="text-black hover:text-teal-700 text-base py-2 border-b border-gray-200">Perfil</a>
+                    </div>
+                </div>
+                
+            </div>
+        </nav>
+        
+        <!-- Contenido principal -->
+        <main class="container mx-auto px-3 sm:px-4 py-4 md:py-6 lg:px-8 max-w-7xl">
+            
+            <!-- Banner de bienvenida -->
+            <div class="bg-emerald-300/80 rounded-xl md:rounded-2xl p-4 sm:p-6 md:p-8 mb-4 md:mb-6 lg:mb-8 mt-2 md:mt-4">
+                <h1 class="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-black text-center">
+                    Bienvenido a Health Mate
+                </h1>
+            </div>
+            
+            <!-- Layout principal con sidebar y contenido -->
+            <div class="flex flex-col lg:flex-row gap-4 md:gap-6">
+                
+                <!-- Sidebar - Filtro -->
+                <aside class="w-full lg:w-1/4 flex-shrink-0">
+                    <div class="bg-white rounded-lg shadow-md border border-black p-4 md:p-6">
+                        <h2 class="text-lg md:text-xl font-bold text-black mb-3 md:mb-4 text-center">
+                            FILTRO SELECCIONADO
+                        </h2>
+                        <div class="mb-3 md:mb-4">
+                            <p class="text-teal-700 text-base md:text-lg font-bold text-center mb-3 md:mb-4">Categoría</p>
+                        </div>
+                        <div class="text-center">
+                            <p class="text-stone-500/90 text-sm md:text-base lg:text-lg font-bold">
+                                Este sistema está diseñado para que puedas llevar el control de tus signos vitales
+                            </p>
+                        </div>
+                    </div>
+                </aside>
+                
+                <!-- Contenido principal - Cards -->
+                <div class="flex-1 w-full">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6">
+                        
+                        <!-- Card 1: Alimentación -->
+                        <div class="bg-stone-300/30 rounded-lg p-4 md:p-6 flex flex-col items-center justify-between min-h-[280px] md:min-h-[320px]">
+                            <div class="w-32 h-32 sm:w-36 sm:h-36 md:w-40 md:h-40 lg:w-48 lg:h-48 bg-gray-200 rounded-lg mb-3 md:mb-4 flex items-center justify-center">
+                                <i class="fas fa-utensils text-4xl md:text-5xl text-gray-400"></i>
+                            </div>
+                            <button class="bg-teal-700 hover:bg-teal-800 active:bg-teal-900 text-white text-base md:text-lg lg:text-xl font-bold py-2 md:py-3 px-6 md:px-8 rounded-2xl transition-colors w-full">
+                                ALIMENTACIÓN
+                            </button>
+                        </div>
+                        
+                        <!-- Card 2: Parámetros de Signos Vitales -->
+                        <div class="bg-stone-300/30 rounded-lg p-4 md:p-6 flex flex-col items-center justify-between min-h-[280px] md:min-h-[320px]">
+                            <div class="w-36 h-36 sm:w-40 sm:h-40 md:w-44 md:h-44 lg:w-52 lg:h-52 bg-gray-200 rounded-lg mb-3 md:mb-4 flex items-center justify-center">
+                                <i class="fas fa-heartbeat text-5xl md:text-6xl text-gray-400"></i>
+                            </div>
+                            <a href="#" class="bg-teal-700 hover:bg-teal-800 active:bg-teal-900 text-white text-sm md:text-base lg:text-lg font-bold py-2 md:py-3 px-3 md:px-4 rounded-2xl transition-colors w-full text-center block">
+                                Parámetros De Los Signos Vitales
+                            </a>
+                        </div>
+                        
+                        <!-- Card 3: Alimentate Sanamente -->
+                        <div class="bg-stone-300/30 rounded-lg p-4 md:p-6 flex flex-col items-center justify-between min-h-[280px] md:min-h-[320px]">
+                            <div class="w-32 h-32 sm:w-36 sm:h-36 md:w-40 md:h-40 lg:w-48 lg:h-48 bg-gray-200 rounded-lg mb-3 md:mb-4 flex items-center justify-center">
+                                <i class="fas fa-apple-alt text-4xl md:text-5xl text-gray-400"></i>
+                            </div>
+                            <div class="text-center mb-3 md:mb-4">
+                                <p class="text-zinc-700 text-sm md:text-base lg:text-lg font-bold">
+                                    Aliméntate Sanamente
+                                </p>
+                            </div>
+                            <button class="bg-teal-700 hover:bg-teal-800 active:bg-teal-900 text-white text-base md:text-lg lg:text-xl font-bold py-2 px-6 md:px-8 rounded-2xl transition-colors">
+                                VER
+                            </button>
+                        </div>
+                        
+                    </div>
+                </div>
+                
+            </div>
+            
+        </main>
+        
+    </div>
+    
+    <script>
+        // Toggle mobile menu
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+        });
+        
+        // Script para verificar el viewport en móviles
+        console.log('Viewport width:', window.innerWidth);
+        console.log('Device pixel ratio:', window.devicePixelRatio);
+        
+        // Prevenir zoom accidental en iOS
+        document.addEventListener('gesturestart', function(e) {
+            e.preventDefault();
+        });
+        
+        // Mostrar información de viewport en consola cuando cambie el tamaño
+        window.addEventListener('resize', function() {
+            console.log('New viewport width:', window.innerWidth);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pacientes | HealthMate</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const toggleSidebar = document.getElementById('toggle-sidebar');
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('main-content');
+            const sidebarItems = document.querySelectorAll('.sidebar-item');
+            const sidebarTexts = document.querySelectorAll('.sidebar-text');
+            
+            // Toggle sidebar
+            toggleSidebar.addEventListener('click', function() {
+                const isCollapsed = sidebar.classList.contains('w-20');
+                
+                if (isCollapsed) {
+                    // Expandir el sidebar
+                    sidebar.classList.remove('w-20');
+                    sidebar.classList.add('w-64');
+                    mainContent.classList.remove('md:ml-20');
+                    mainContent.classList.add('md:ml-64');
+                } else {
+                    // Colapsar el sidebar
+                    sidebar.classList.remove('w-64');
+                    sidebar.classList.add('w-20');
+                    mainContent.classList.remove('md:ml-64');
+                    mainContent.classList.add('md:ml-20');
+                }
+                
+                // Toggle text in sidebar items
+                sidebarTexts.forEach(text => {
+                    text.classList.toggle('hidden');
+                    text.classList.toggle('md:inline-block');
+                });
+                
+                // Toggle icons position
+                sidebarItems.forEach(item => {
+                    item.classList.toggle('justify-center');
+                    item.classList.toggle('px-6');
+                });
+            });
+            
+            // Close sidebar on mobile when clicking outside
+            document.addEventListener('click', function(event) {
+                if (window.innerWidth < 768 && !sidebar.contains(event.target) && event.target !== toggleSidebar) {
+                    sidebar.classList.add('hidden');
+                    mainContent.classList.remove('md:ml-64');
+                }
+            });
+        });
+    </script>
+</head>
+<body class="bg-gray-100 overflow-hidden">
+    <div class="w-[1280px] h-[720px] relative bg-zinc-100 overflow-hidden">
+  <div class="w-[1229px] h-[671px] left-[24px] top-[25px] absolute rounded-3xl overflow-hidden">
+    <div class="w-[1229px] h-[671px] left-0 top-0 absolute bg-sky-200 rounded-3xl"></div>
+    <div class="w-28 h-24 left-[-21px] top-[-51px] absolute bg-teal-500/80 rounded-full blur-[80px]"></div>
+    <div class="w-48 h-56 left-[1079.30px] top-[30px] absolute origin-top-left rotate-[34.12deg] bg-teal-600 rounded-[36px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] shadow-[inset_0px_4px_8px_0px_rgba(0,0,0,0.25)]"></div>
+    <div class="w-52 h-52 left-[1002.50px] top-[44.85px] absolute origin-top-left rotate-[16.56deg] bg-orange-400 rounded-[36px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] shadow-[inset_0px_4px_8px_0px_rgba(0,0,0,0.25)]"></div>
+    <div class="w-56 h-56 left-[950px] top-[75px] absolute rounded-[36px]">
+      <div class="w-56 h-64 left-0 top-0 absolute bg-gradient-to-br from-violet-700 to-indigo-950 rounded-[36px] shadow-[inset_0px_4px_32px_20px_rgba(0,0,0,0.25)] border border-purple-950"></div>
+      <div class="w-28 h-24 left-[25px] top-[12px] absolute bg-fuchsia-600 rounded-full blur-[80px]"></div>
+    </div>
+    <div class="w-52 h-7 left-[97px] top-[24px] absolute justify-start text-black text-base font-normal font-['Inter']">Dashboard da @say.valente</div>
+    <div class="w-32 h-24 left-[-21px] top-[597px] absolute bg-amber-700/20 rounded-full blur-[80px]"></div>
+    <div class="w-5 h-0 left-[38px] top-[30px] absolute outline outline-[1.50px] outline-offset-[-0.75px] outline-black"></div>
+    <div class="w-3.5 h-0 left-[38px] top-[37px] absolute outline outline-[1.50px] outline-offset-[-0.75px] outline-black"></div>
+    <div class="w-2.5 h-0 left-[38px] top-[44px] absolute outline outline-[1.50px] outline-offset-[-0.75px] outline-black"></div>
+  </div>
+  <div class="w-[809px] h-48 left-[121px] top-[281px] absolute bg-neutral-400 rounded-[20px] shadow-[0px_4px_8px_2px_rgba(0,0,0,0.25)]"></div>
+  <div class="w-64 h-72 left-[967px] top-[398px] absolute bg-neutral-400 rounded-[20px] shadow-[0px_4px_8px_2px_rgba(0,0,0,0.25)]"></div>
+  <div class="w-96 h-40 left-[121px] top-[514px] absolute bg-neutral-400 rounded-[20px] shadow-[0px_4px_8px_2px_rgba(0,0,0,0.25)]"></div>
+  <div class="w-96 h-40 left-[544px] top-[514px] absolute bg-neutral-400 rounded-[20px] shadow-[0px_4px_8px_2px_rgba(0,0,0,0.25)]"></div>
+  <div class="w-60 h-40 left-[121px] top-[90px] absolute bg-neutral-400 rounded-[20px] shadow-[0px_4px_8px_2px_rgba(0,0,0,0.25)]"></div>
+  <div class="w-60 h-40 left-[403px] top-[90px] absolute bg-neutral-400 rounded-[20px] shadow-[0px_4px_8px_2px_rgba(0,0,0,0.25)]"></div>
+  <div class="w-60 h-40 left-[685px] top-[90px] absolute bg-neutral-400 rounded-[20px] shadow-[0px_4px_8px_2px_rgba(0,0,0,0.25)]"></div>
+  <div class="w-7 h-7 left-[58.07px] top-[201.78px] absolute bg-black overflow-hidden">
+    <div class="w-6 h-3 left-[2.33px] top-[2.33px] absolute outline outline-2 outline-offset-[-1px] outline-zinc-400"></div>
+    <div class="w-6 h-1.5 left-[2.33px] top-[19.83px] absolute outline outline-2 outline-offset-[-1px] outline-zinc-400"></div>
+    <div class="w-6 h-1.5 left-[2.33px] top-[14px] absolute outline outline-2 outline-offset-[-1px] outline-zinc-400"></div>
+  </div>
+  <div class="w-7 h-7 left-[58.07px] top-[289.78px] absolute bg-black overflow-hidden">
+    <div class="w-6 h-5 left-[1.86px] top-[3.34px] absolute bg-zinc-400 outline outline-[0.20px] outline-zinc-400"></div>
+  </div>
+  <div class="w-7 h-7 left-[58.07px] top-[377.78px] absolute bg-black overflow-hidden">
+    <div class="w-6 h-6 left-[2.33px] top-[3.30px] absolute outline outline-2 outline-offset-[-1px] outline-zinc-400"></div>
+    <div class="w-3 h-3 left-[14px] top-[2.33px] absolute outline outline-2 outline-offset-[-1px] outline-zinc-400"></div>
+  </div>
+  <div class="w-7 h-7 left-[58.07px] top-[465.78px] absolute bg-black overflow-hidden">
+    <div class="w-5 h-5 left-[3.50px] top-[4.67px] absolute outline outline-2 outline-offset-[-1px] outline-zinc-400"></div>
+    <div class="w-0 h-1 left-[18.67px] top-[2.33px] absolute outline outline-2 outline-offset-[-1px] outline-zinc-400"></div>
+    <div class="w-0 h-1 left-[9.33px] top-[2.33px] absolute outline outline-2 outline-offset-[-1px] outline-zinc-400"></div>
+    <div class="w-5 h-0 left-[3.50px] top-[11.67px] absolute outline outline-2 outline-offset-[-1px] outline-zinc-400"></div>
+  </div>
+  <div class="w-14 h-14 left-[44px] top-[100px] absolute bg-blue-600/10 rounded-2xl"></div>
+  <div data-property-1="Home Filled" class="w-7 h-7 left-[58.07px] top-[113.78px] absolute overflow-hidden">
+    <div class="w-5 h-6 left-[3.50px] top-[2.92px] absolute bg-violet-700 outline outline-1 outline-offset-[-0.50px] outline-violet-700"></div>
+    <div class="w-5 h-6 left-[3.50px] top-[2.33px] absolute outline outline-[1.50px] outline-offset-[-0.75px] outline-violet-700"></div>
+    <div class="w-1.5 h-2 left-[10.50px] top-[14px] absolute outline outline-[1.50px] outline-offset-[-0.75px] outline-white"></div>
+  </div>
+</div>

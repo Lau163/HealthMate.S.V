@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enfermerx | HealthMate</title>
+    <title>Doctor | HealthMate</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script>
@@ -56,7 +56,6 @@
     </script>
 </head>
 <body class="bg-gray-100 overflow-hidden">
-<<<<<<< Updated upstream
     <div class="flex h-screen w-full">
         <!-- Sidebar -->
         <div id="sidebar" class="bg-white shadow-lg w-64 h-full transition-all duration-300 ease-in-out z-50 fixed md:relative flex-shrink-0">
@@ -79,10 +78,10 @@
                         <span class="sidebar-text ml-3 hidden md:inline-block">Inicio</span>
                     </a>
                     
-                    <!-- Enfermerx -->
+                    <!-- Doctor -->
                     <a href="#" class="sidebar-item flex items-center px-6 py-3 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-50">
                         <i class="fas fa-users text-lg"></i>
-                        <span class="sidebar-text ml-3 hidden md:inline-block">Enfermerx</span>
+                        <span class="sidebar-text ml-3 hidden md:inline-block">Doctor</span>
                     </a>
                     
                     <!-- Reservas -->
@@ -121,7 +120,7 @@
                         <button id="mobile-menu-button" class="md:hidden text-white mr-4">
                             <i class="fas fa-bars text-xl"></i>
                         </button>
-                        <h1 class="text-xl font-semibold text-white">Enfermerx</h1>
+                        <h1 class="text-xl font-semibold text-white">Doctor</h1>
                     </div>
                     
                     <div class="flex items-center space-x-4">
@@ -156,14 +155,14 @@
                             <h2 class="text-xl font-semibold text-gray-800">Lista de Pacientes</h2>
                             <p class="text-sm text-gray-500 mt-1">Gestiona los pacientes del sistema</p>
                         </div>
-                        <a href="<?= BASE_URL ?>doctor/nuevo-paciente" class="mt-4 md:mt-0 inline-flex items-center bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-md text-sm font-medium transition duration-150 ease-in-out">
-                            <i class="fas fa-plus mr-2"></i>Nuevo Paciente
-                        </a>
+                        <button class="mt-4 md:mt-0 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-md text-sm font-medium transition duration-150 ease-in-out">
+                            <i class="fas fa-plus mr-2"></i>Nuevo Doctor
+                        </button>
                     </div>
                     
                     <?php 
-                    // Obtener los pacientes del controlador
-                    $pacientes = $pacientes ?? ($this->get('pacientes') ?? []);
+                    // Obtener los doctor del controlador
+                    $doctor = $doctor ?? ($this->get('doctor') ?? []);
                     $error = $_SESSION['error'] ?? '';
                     $success = $_SESSION['success'] ?? '';
                     
@@ -203,16 +202,16 @@
                     
                     <!-- Table -->
                     <div class="overflow-x-auto">
-                        <?php if (empty($pacientes)): ?>
+                        <?php if (empty($doctor)): ?>
                             <div class="text-center py-4 text-gray-500">
-                                No hay pacientes para mostrar.
+                                No hay doctor para mostrar.
                             </div>
                         <?php else: ?>
                             <table class="min-w-full divide-y divide-gray-200">
                                 <thead class="bg-gray-50">
                                     <tr>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Paciente</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Doctor</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Edad</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sexo</th>
@@ -223,8 +222,8 @@
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white divide-y divide-gray-200">
-                                    <?php foreach ($pacientes as $paciente): 
-                                        $nombreCompleto = trim($paciente['Nombre'] ?? '');
+                                    <?php foreach ($doctor as $doctor): 
+                                        $nombreCompleto = trim(($doctor['Nombres'] ?? '') . ' ' . ($doctor['Apellidos'] ?? ''));
                                         $iniciales = '';
                                         if (!empty($nombreCompleto)) {
                                             $nombres = explode(' ', $nombreCompleto);
@@ -233,7 +232,7 @@
                                     ?>
                                         <tr class="hover:bg-gray-50">
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                <?php echo htmlspecialchars($paciente['Id_Usuario'] ?? ''); ?>
+                                                <?php echo htmlspecialchars($doctor['Id_Usuario'] ?? ''); ?>
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap">
                                                 <div class="flex items-center">
@@ -241,17 +240,17 @@
                                                         <span class="text-emerald-600 font-medium"><?php echo $iniciales; ?></span>
                                                     </div>
                                                     <div class="text-sm font-medium text-gray-900">
-                                                        <?php echo htmlspecialchars($paciente['Nombre'] ?? 'Sin nombre'); ?>
+                                                        <?php echo htmlspecialchars($doctor['Nombre'] ?? 'Sin nombre'); ?>
                                                     </div>
                                                 </div>
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                <?php echo htmlspecialchars($paciente['Email'] ?? 'No especificado'); ?>
+                                                <?php echo htmlspecialchars($doctor['Email'] ?? 'No especificado'); ?>
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                                 <?php 
-                                                if (!empty($paciente['Edad'])) {
-                                                    echo htmlspecialchars($paciente['Edad']) . ' años';
+                                                if (!empty($doctor['Edad'])) {
+                                                    echo htmlspecialchars($doctor['Edad']) . ' años';
                                                 } else {
                                                     echo 'No especificado';
                                                 }
@@ -259,7 +258,7 @@
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                                 <?php 
-                                                $sexo = $paciente['Sexo'] ?? '';
+                                                $sexo = $doctor['Sexo'] ?? '';
                                                 if ($sexo === 'M') {
                                                     echo 'Masculino';
                                                 } elseif ($sexo === 'F') {
@@ -271,8 +270,8 @@
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                                 <?php 
-                                                if (!empty($paciente['Altura'])) {
-                                                    echo htmlspecialchars($paciente['Altura']) . ' cm';
+                                                if (!empty($doctor['Altura'])) {
+                                                    echo htmlspecialchars($doctor['Altura']) . ' cm';
                                                 } else {
                                                     echo 'No especificado';
                                                 }
@@ -280,15 +279,15 @@
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                                 <?php 
-                                                echo !empty($paciente['Tipo_sangre']) 
-                                                    ? htmlspecialchars($paciente['Tipo_sangre'])
+                                                echo !empty($doctor['Tipo_sangre']) 
+                                                    ? htmlspecialchars($doctor['Tipo_sangre'])
                                                     : 'No especificado';
                                                 ?>
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                                 <?php 
-                                                if (!empty($paciente['Fecha_Registro'])) {
-                                                    $fecha = new DateTime($paciente['Fecha_Registro']);
+                                                if (!empty($doctor['Fecha_Registro'])) {
+                                                    $fecha = new DateTime($doctor['Fecha_Registro']);
                                                     echo $fecha->format('d/m/Y');
                                                 } else {
                                                     echo 'No especificado';
@@ -296,13 +295,13 @@
                                                 ?>
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                                <a href="<?php echo URL; ?>paciente/ver/<?php echo $paciente['Id_Usuario']; ?>" class="text-emerald-600 hover:text-emerald-900 mr-3" title="Ver">
+                                                <a href="<?php echo URL; ?>doctor/ver/<?php echo $doctor['Id_Usuario']; ?>" class="text-emerald-600 hover:text-emerald-900 mr-3" title="Ver">
                                                     <i class="far fa-eye"></i>
                                                 </a>
-                                                <a href="<?php echo URL; ?>paciente/editar/<?php echo $paciente['Id_Usuario']; ?>" class="text-blue-600 hover:text-blue-900 mr-3" title="Editar">
+                                                <a href="<?php echo URL; ?>doctor/editar/<?php echo $doctor['Id_Usuario']; ?>" class="text-blue-600 hover:text-blue-900 mr-3" title="Editar">
                                                     <i class="far fa-edit"></i>
                                                 </a>
-                                                <a href="<?php echo URL; ?>paciente/eliminar/<?php echo $paciente['Id_Usuario']; ?>" class="text-red-600 hover:text-red-900" title="Eliminar" onclick="return confirm('¿Estás seguro de eliminar este paciente?')">
+                                                <a href="<?php echo URL; ?>doctor/eliminar/<?php echo $doctor['Id_Usuario']; ?>" class="text-red-600 hover:text-red-900" title="Eliminar" onclick="return confirm('¿Estás seguro de eliminar este paciente?')">
                                                     <i class="far fa-trash-alt"></i>
                                                 </a>
                                             </td>
@@ -357,40 +356,3 @@
     </div>
 </body>
 </html>
-=======
-   <div class="w-[1440px] h-[900px] relative bg-white overflow-hidden">
-  <img class="w-5 h-5 left-[1139px] top-[85px] absolute" src="https://placehold.co/20x20" />
-  <img class="w-5 h-5 left-[1239px] top-[85px] absolute" src="https://placehold.co/20x20" />
-  <img class="w-5 h-5 left-[1189px] top-[85px] absolute" src="https://placehold.co/20x20" />
-  <div class="left-[165px] top-[78px] absolute text-center justify-start text-black text-xl font-normal font-['Baloo_Chettan']">Home</div>
-  <div class="left-[265px] top-[78px] absolute text-center justify-start text-black text-xl font-normal font-['Baloo_Chettan']">Tienda</div>
-  <div class="left-[369px] top-[78px] absolute text-center justify-start text-black text-xl font-normal font-['Baloo_Chettan']">Servicios</div>
-  <div class="left-[496px] top-[80px] absolute text-center justify-start text-black text-xl font-normal font-['Baloo_Chettan']">Página</div>
-  <div class="w-8 h-0 left-[396px] top-[115px] absolute shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] outline outline-4 outline-offset-[-2px] outline-neutral-500"></div>
-  <div class="w-[1309px] h-0 left-[30px] top-[134px] absolute outline outline-2 outline-offset-[-1px] outline-stone-400/90"></div>
-  <div class="left-[97px] top-[321px] absolute text-center justify-start text-black text-xl font-bold font-['Roboto']">FILTRO SELECCIONADO</div>
-  <div class="w-28 h-5 left-[109px] top-[422px] absolute text-center justify-start text-teal-700 text-xl font-bold font-['Roboto']">Categoría</div>
-  <div class="left-[176px] top-[486px] absolute text-center justify-start text-stone-500/90 text-xl font-bold font-['Roboto']">Hospedaje</div>
-  <div class="w-6 h-6 left-[127px] top-[485px] absolute bg-zinc-700 border border-zinc-700"></div>
-  <div class="w-64 h-80 left-[84px] top-[379px] absolute bg-stone-300/0 rounded-[10px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] border border-black"></div>
-  <div class="w-[907px] h-32 left-[396px] top-[172px] absolute bg-emerald-300/80 rounded-[20px]"></div>
-  <div class="w-[464px] h-16 left-[613px] top-[208px] absolute text-center justify-start text-black text-4xl font-bold font-['Roboto']">SERVICIOS</div>
-  <div class="w-72 h-96 left-[1008px] top-[337px] absolute bg-stone-300/30 rounded-[10px]"></div>
-  <div class="w-44 h-10 left-[1061px] top-[668px] absolute bg-teal-700 rounded-2xl"></div>
-  <div class="left-[1100px] top-[677px] absolute text-center justify-start text-white text-xl font-bold font-['Roboto']">COMPRAR</div>
-  <div class="left-[1111px] top-[608px] absolute text-center justify-start text-zinc-700 text-lg font-bold font-['Roboto']">Full Day<br/>S/. 70.00</div>
-  <img class="w-48 h-48 left-[1049px] top-[379px] absolute" src="https://placehold.co/199x199" />
-  <div class="w-72 h-96 left-[710px] top-[337px] absolute bg-stone-300/30 rounded-[10px]"></div>
-  <div class="w-44 h-10 left-[763px] top-[668px] absolute bg-teal-700 rounded-2xl"></div>
-  <div class="left-[802px] top-[677px] absolute text-center justify-start text-white text-xl font-bold font-['Roboto']">COMPRAR</div>
-  <div class="left-[768px] top-[608px] absolute text-center justify-start text-zinc-700 text-lg font-bold font-['Roboto']">Hospedaje Premium<br/>S/. 70.00</div>
-  <img class="w-48 h-48 left-[751px] top-[379px] absolute" src="https://placehold.co/199x199" />
-  <div class="w-72 h-96 left-[412px] top-[337px] absolute bg-stone-300/30 rounded-[10px]"></div>
-  <div class="w-44 h-10 left-[465px] top-[668px] absolute bg-teal-700 rounded-2xl"></div>
-  <div class="w-24 left-[504px] top-[677px] absolute text-center justify-start text-white text-xl font-bold font-['Roboto']">COMPRAR</div>
-  <div class="w-36 left-[477px] top-[608px] absolute text-center justify-start text-zinc-700 text-lg font-bold font-['Roboto']">Hospedaje Clásico<br/>S/. 40.00</div>
-  <img class="w-48 h-48 left-[453px] top-[379px] absolute" src="https://placehold.co/198x198" />
-  <div class="left-[176px] top-[541px] absolute text-center justify-start text-stone-500/90 text-xl font-bold font-['Roboto']">Baños</div>
-  <div class="w-6 h-6 left-[127px] top-[538px] absolute bg-stone-300 border border-black"></div>
-</div>
->>>>>>> Stashed changes
