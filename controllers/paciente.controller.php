@@ -11,9 +11,10 @@ class Paciente extends ControllerBase
     function render() {
         // Obtener pacientes de forma dinámica
         $pacientes = [];
-        if ($this->model) {
+        $model = $this->getModel('paciente');
+        if ($model) {
             try {
-                $pacientes = $this->model->getAll();
+                $pacientes = $model->getAll();
             } catch (Throwable $th) {
                 // Puedes loguear el error si deseas
             }
@@ -32,7 +33,7 @@ class Paciente extends ControllerBase
 
         $totalPacientes = 0;
         try {
-            $lista = $this->model ? $this->model->getAll() : [];
+            $lista = $this->getModel('paciente') ? $this->getModel('paciente')->getAll() : [];
             $totalPacientes = is_array($lista) ? count($lista) : 0;
         } catch (Throwable $th) {
             $totalPacientes = 0;
@@ -84,7 +85,8 @@ class Paciente extends ControllerBase
                 }
 
                 // Crear el paciente
-                $idPaciente = $this->model->create($datos);
+                $usuarioModel = $this->getModel('usuario');
+                $idPaciente = $usuarioModel ? $usuarioModel->create($datos) : null;
                 
                 if ($idPaciente) {
                     $_SESSION['success'] = 'Paciente creado correctamente';
@@ -106,7 +108,7 @@ class Paciente extends ControllerBase
 
     // Mostrar formulario de edición o actualizar un paciente (según método)
     public function editar($params = []) {
-        if (!$this->model) { 
+        if (!$this->getModel('paciente')) { 
             $this->view->render('paciente/paciente'); 
             return; 
         }
@@ -131,7 +133,10 @@ class Paciente extends ControllerBase
                 'Enfermedades' => $_POST['Enfermedades'] ?? null,
             ];
             try {
-                $this->model->updateById($id, $datos);
+                $pacienteModel = $this->getModel('paciente');
+                if ($pacienteModel) {
+                    $pacienteModel->updateById($id, $datos);
+                }
                 $_SESSION['success'] = 'Paciente actualizado correctamente';
                 header('Location: ' . BASE_URL . 'paciente');
                 exit;
@@ -141,7 +146,8 @@ class Paciente extends ControllerBase
                 exit;
             }
         } else {
-            $paciente = $this->model->getById($id);
+            $pacienteModel = $this->getModel('paciente');
+            $paciente = $pacienteModel ? $pacienteModel->getById($id) : null;
             if (!$paciente) {
                 $_SESSION['error'] = 'Paciente no encontrado';
                 header('Location: ' . BASE_URL . 'paciente');
@@ -160,7 +166,7 @@ class Paciente extends ControllerBase
             exit;
         }
         
-        if (!$this->model) { 
+        if (!$this->getModel('paciente')) { 
             $_SESSION['error'] = 'Modelo no disponible'; 
             header('Location: ' . BASE_URL . 'paciente'); 
             exit; 
@@ -174,7 +180,10 @@ class Paciente extends ControllerBase
         }
         
         try {
-            $this->model->deleteById($id);
+            $pacienteModel = $this->getModel('paciente');
+            if ($pacienteModel) {
+                $pacienteModel->deleteById($id);
+            }
             $_SESSION['success'] = 'Paciente eliminado correctamente';
         } catch (Throwable $th) {
             $_SESSION['error'] = 'No se pudo eliminar el paciente';
@@ -182,6 +191,107 @@ class Paciente extends ControllerBase
         
         header('Location: ' . BASE_URL . 'paciente');
         exit;
+    }
+    public function ParametrosSV() {
+        if (!isset($_SESSION['usuario_id'])) {
+            header('Location: ' . BASE_URL . 'auth');
+            exit;
+        }
+        $this->view->render('paciente/parametrossv');
+    }
+
+    // Método para mostrar servicios
+    public function servicios() {
+        if (!isset($_SESSION['usuario_id'])) {
+            header('Location: ' . BASE_URL . 'auth');
+            exit;
+        }
+        $this->view->render('paciente/servicios');
+    }
+
+    // Método para mostrar gráficas
+    public function Graficas() {
+        if (!isset($_SESSION['usuario_id'])) {
+            header('Location: ' . BASE_URL . 'auth');
+            exit;
+        }
+        $this->view->render('paciente/graficas');
+    }
+
+    // Método para mostrar archivo médico
+    public function Archivo() {
+        if (!isset($_SESSION['usuario_id'])) {
+            header('Location: ' . BASE_URL . 'auth');
+            exit;
+        }
+        $this->view->render('paciente/archivo');
+    }
+
+    // Método para mostrar consejos
+    public function PaginasConsejos() {
+        if (!isset($_SESSION['usuario_id'])) {
+            header('Location: ' . BASE_URL . 'auth');
+            exit;
+        }
+        $this->view->render('paciente/paginasconsejos');
+    }
+
+    // Método para mostrar perfil del paciente
+    public function Perfil() {
+        if (!isset($_SESSION['usuario_id'])) {
+            header('Location: ' . BASE_URL . 'auth');
+            exit;
+        }
+
+        // Obtener datos del paciente actual
+        $pacienteModel = $this->getModel('paciente');
+        $paciente = null;
+
+        if ($pacienteModel && isset($_SESSION['usuario_id'])) {
+            try {
+                $paciente = $pacienteModel->getByUsuarioId($_SESSION['usuario_id']);
+            } catch (Throwable $th) {
+                // Error al obtener datos del paciente
+            }
+        }
+
+        $this->view->set('paciente', $paciente);
+        $this->view->render('paciente/perfil');
+    }
+
+    // Página de consejos de bienestar mental
+    public function bienestarMental() {
+        $this->view->render('paciente/bienestarMental');
+    }
+
+    // Página de consejos de alimentación
+    public function alimentacion() {
+        $this->view->render('paciente/alimentacion');
+    }
+
+    // Página de consejos de hidratación
+    public function hidratacion() {
+        $this->view->render('paciente/hidratacion');
+    }
+
+    // Página de consejos de prevención médica
+    public function prevencionMedica() {
+        $this->view->render('paciente/prevencionMedica');
+    }
+
+    // Página de consejos de actividad física
+    public function actividadFisica() {
+        $this->view->render('paciente/actividadFisica');
+    }
+
+    // Página de consejos de sueño y descanso
+    public function suenoDescanso() {
+        $this->view->render('paciente/suenoDescanso');
+    }
+
+    // Página de prueba de rutas
+    public function testRutas() {
+        require_once '../test-rutas.php';
     }
 }
 ?>

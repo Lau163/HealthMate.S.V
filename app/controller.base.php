@@ -33,8 +33,6 @@ class ControllerBase {
             $modelName = $model . "Model";
             if (class_exists($modelName)) {
                 $this->models[$model] = new $modelName();
-                // También lo asignamos como propiedad dinámica para compatibilidad
-                $this->$model = $this->models[$model];
                 return $this->models[$model];
             }
         }

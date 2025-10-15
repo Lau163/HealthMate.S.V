@@ -21,8 +21,8 @@ class Login extends ControllerBase
         session_unset();
         session_destroy();
         
-        // Redirigir al login
-        header('Location: ' . constant('URL') . 'index');
+        // Redirigir al index
+        header('Location: ' . BASE_URL);
         exit();
     }
 }

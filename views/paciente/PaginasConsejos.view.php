@@ -74,7 +74,8 @@
                             <img class="w-40 h-40 sm:w-44 sm:h-44 md:w-48 md:h-48 object-contain mb-3 md:mb-4" 
                                  src="<?= constant("URL") ?>public/img/PX/BM.png" 
                                  alt="Bienestar Mental" />
-                            <button class="bg-teal-700 hover:bg-teal-800 active:bg-teal-900 text-white text-sm md:text-base font-bold py-2 px-4 md:px-6 rounded-2xl transition-colors w-full">
+                            <button onclick="window.location.href='<?= constant('URL') ?>paciente/bienestarMental'"
+                                    class="bg-teal-700 hover:bg-teal-800 active:bg-teal-900 text-white text-sm md:text-base font-bold py-2 px-4 md:px-6 rounded-2xl transition-colors w-full">
                                 BIENESTAR MENTAL
                             </button>
                         </div>
@@ -84,7 +85,8 @@
                             <img class="w-44 h-44 sm:w-48 sm:h-48 md:w-52 md:h-52 object-contain mb-3 md:mb-4" 
                                  src="<?= constant("URL") ?>public/img/PX/AS.png" 
                                  alt="Alimentación" />
-                            <button class="bg-teal-700 hover:bg-teal-800 active:bg-teal-900 text-white text-base md:text-lg lg:text-xl font-bold py-2 md:py-3 px-6 md:px-8 rounded-2xl transition-colors w-full">
+                            <button onclick="window.location.href='<?= constant('URL') ?>paciente/alimentacion'"
+                                    class="bg-teal-700 hover:bg-teal-800 active:bg-teal-900 text-white text-base md:text-lg lg:text-xl font-bold py-2 md:py-3 px-6 md:px-8 rounded-2xl transition-colors w-full">
                                 ALIMENTACIÓN
                             </button>
                         </div>
@@ -94,7 +96,8 @@
                             <img class="w-40 h-40 sm:w-44 sm:h-44 md:w-48 md:h-48 object-contain mb-3 md:mb-4" 
                                  src="<?= constant("URL") ?>public/img/PX/BV.png" 
                                  alt="Hidratación" />
-                            <button class="bg-teal-700 hover:bg-teal-800 active:bg-teal-900 text-white text-base md:text-lg lg:text-xl font-bold py-2 md:py-3 px-6 md:px-8 rounded-2xl transition-colors w-full">
+                            <button onclick="window.location.href='<?= constant('URL') ?>paciente/hidratacion'"
+                                    class="bg-teal-700 hover:bg-teal-800 active:bg-teal-900 text-white text-base md:text-lg lg:text-xl font-bold py-2 md:py-3 px-6 md:px-8 rounded-2xl transition-colors w-full">
                                 HIDRATACIÓN
                             </button>
                         </div>
@@ -104,7 +107,8 @@
                             <img class="w-40 h-40 sm:w-44 sm:h-44 md:w-48 md:h-48 object-contain mb-3 md:mb-4" 
                                  src="<?= constant("URL") ?>public/img/PX/S.png" 
                                  alt="Prevención Médica" />
-                            <button class="bg-teal-700 hover:bg-teal-800 active:bg-teal-900 text-white text-sm md:text-base font-bold py-2 px-4 md:px-6 rounded-2xl transition-colors w-full">
+                            <button onclick="window.location.href='<?= constant('URL') ?>paciente/prevencionMedica'"
+                                    class="bg-teal-700 hover:bg-teal-800 active:bg-teal-900 text-white text-sm md:text-base font-bold py-2 px-4 md:px-6 rounded-2xl transition-colors w-full">
                                 PREVENCIÓN MÉDICA
                             </button>
                         </div>
@@ -114,7 +118,8 @@
                             <img class="w-40 h-40 sm:w-44 sm:h-44 md:w-48 md:h-48 object-contain mb-3 md:mb-4" 
                                  src="<?= constant("URL") ?>public/img/PX/P.png" 
                                  alt="Actividad Física" />
-                            <button class="bg-teal-700 hover:bg-teal-800 active:bg-teal-900 text-white text-sm md:text-base font-bold py-2 px-4 md:px-6 rounded-2xl transition-colors w-full">
+                            <button onclick="window.location.href='<?= constant('URL') ?>paciente/actividadFisica'"
+                                    class="bg-teal-700 hover:bg-teal-800 active:bg-teal-900 text-white text-sm md:text-base font-bold py-2 px-4 md:px-6 rounded-2xl transition-colors w-full">
                                 ACTIVIDAD FÍSICA
                             </button>
                         </div>
@@ -124,7 +129,8 @@
                             <img class="w-40 h-40 sm:w-44 sm:h-44 md:w-48 md:h-48 object-contain mb-3 md:mb-4" 
                                  src="<?= constant("URL") ?>public/img/PX/C.png" 
                                  alt="Sueño y Descanso" />
-                            <button class="bg-teal-700 hover:bg-teal-800 active:bg-teal-900 text-white text-sm md:text-base font-bold py-2 px-4 md:px-6 rounded-2xl transition-colors w-full">
+                            <button onclick="window.location.href='<?= constant('URL') ?>paciente/suenoDescanso'"
+                                    class="bg-teal-700 hover:bg-teal-800 active:bg-teal-900 text-white text-sm md:text-base font-bold py-2 px-4 md:px-6 rounded-2xl transition-colors w-full">
                                 SUEÑO Y DESCANSO
                             </button>
                         </div>

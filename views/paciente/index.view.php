@@ -6,78 +6,164 @@
     <title>Pacientes | HealthMate</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Fuentes personalizadas */
+        @import url('https://fonts.googleapis.com/css2?family=Baloo+Chettan+2:wght@400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap');
+
+        /* Scroll suave */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Animaciones para las tarjetas */
+        .card-hover {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen">
+    <!-- Navbar -->
+    <?php include('navbar.view.php') ?>
+
+    <!-- Contenido principal con scroll -->
+    <div class="min-h-screen pt-20">
+        <div class="container mx-auto px-4 py-8">
+            <!-- Hero Section -->
+            <div class="bg-gradient-to-r from-emerald-400 to-teal-500 rounded-3xl p-8 mb-8 shadow-lg">
+                <div class="text-center text-white">
+                    <h1 class="text-5xl font-bold font-['Roboto'] mb-4">Bienvenido a HealthMate</h1>
+                    <p class="text-xl opacity-90">Tu compañero digital para el cuidado de la salud</p>
+                </div>
+            </div>
+
+            <!-- Filtros Section -->
+            <div class="bg-white rounded-xl shadow-sm p-6 mb-8">
+                <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+                    <h2 class="text-2xl font-bold text-gray-800">FILTRO SELECCIONADO</h2>
+                    <div class="flex gap-4">
+                        <button class="bg-teal-600 hover:bg-teal-700 text-white px-6 py-2 rounded-lg transition-colors">
+                            Todos
+                        </button>
+                        <button class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-6 py-2 rounded-lg transition-colors">
+                            Favoritos
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Servicios Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Signos Vitales Card -->
+                <div class="bg-white rounded-xl shadow-sm p-6 card-hover">
+                    <div class="text-center">
+                        <div class="w-20 h-20 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-heartbeat text-2xl text-emerald-600"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-3">Parámetros de Signos Vitales</h3>
+                        <p class="text-gray-600 text-sm mb-4">
+                            Este sistema está diseñado para que puedas llevar el control de tus signos vitales de manera fácil y efectiva.
+                        </p>
+                        <button onclick="window.location.href='<?= constant('URL') ?>paciente/ParametrosSV'"
+                                class="bg-teal-600 hover:bg-teal-700 text-white px-6 py-2 rounded-lg transition-colors w-full">
+                            Ver Detalles
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Alimentación Card -->
+                <div class="bg-white rounded-xl shadow-sm p-6 card-hover">
+                    <div class="text-center">
+                        <div class="w-20 h-20 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-utensils text-2xl text-orange-600"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-3">ALIMENTACIÓN</h3>
+                        <p class="text-gray-600 text-sm mb-4">
+                            Consejos y seguimiento de tu alimentación saludable para mantener tu bienestar.
+                        </p>
+                        <button onclick="window.location.href='<?= constant('URL') ?>paciente/servicios'"
+                                class="bg-teal-600 hover:bg-teal-700 text-white px-6 py-2 rounded-lg transition-colors w-full">
+                            Explorar
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Prevención Médica Card -->
+                <div class="bg-white rounded-xl shadow-sm p-6 card-hover">
+                    <div class="text-center">
+                        <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-seedling text-2xl text-green-600"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-3">Prevención Médica</h3>
+                        <p class="text-gray-600 text-sm mb-4">
+                            Descubre medidas preventivas y cuidados médicos para mantener tu salud óptima.
+                        </p>
+                        <button onclick="window.location.href='<?= constant('URL') ?>paciente/servicios'"
+                                class="bg-teal-600 hover:bg-teal-700 text-white px-6 py-2 rounded-lg transition-colors w-full">
+                            VER
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Información adicional -->
+            <div class="mt-12 bg-white rounded-xl shadow-sm p-8">
+                <div class="text-center">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-6">¿Cómo funciona HealthMate?</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <div class="text-center">
+                            <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <i class="fas fa-mobile-alt text-2xl text-blue-600"></i>
+                            </div>
+                            <h3 class="text-lg font-semibold mb-2">Registra</h3>
+                            <p class="text-gray-600">Registra tus signos vitales diariamente de forma sencilla</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <i class="fas fa-chart-line text-2xl text-purple-600"></i>
+                            </div>
+                            <h3 class="text-lg font-semibold mb-2">Visualiza</h3>
+                            <p class="text-gray-600">Ve gráficos y tendencias de tu salud en tiempo real</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="w-16 h-16 bg-pink-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <i class="fas fa-bell text-2xl text-pink-600"></i>
+                            </div>
+                            <h3 class="text-lg font-semibold mb-2">Recibe Alertas</h3>
+                            <p class="text-gray-600">Obtén notificaciones sobre tu salud y bienestar</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
+        // Funcionalidad mejorada para scroll suave
         document.addEventListener('DOMContentLoaded', function() {
-            const toggleSidebar = document.getElementById('toggle-sidebar');
-            const sidebar = document.getElementById('sidebar');
-            const mainContent = document.getElementById('main-content');
-            const sidebarItems = document.querySelectorAll('.sidebar-item');
-            const sidebarTexts = document.querySelectorAll('.sidebar-text');
-            
-            // Toggle sidebar
-            toggleSidebar.addEventListener('click', function() {
-                const isCollapsed = sidebar.classList.contains('w-20');
-                
-                if (isCollapsed) {
-                    // Expandir el sidebar
-                    sidebar.classList.remove('w-20');
-                    sidebar.classList.add('w-64');
-                    mainContent.classList.remove('md:ml-20');
-                    mainContent.classList.add('md:ml-64');
-                } else {
-                    // Colapsar el sidebar
-                    sidebar.classList.remove('w-64');
-                    sidebar.classList.add('w-20');
-                    mainContent.classList.remove('md:ml-64');
-                    mainContent.classList.add('md:ml-20');
-                }
-                
-                // Toggle text in sidebar items
-                sidebarTexts.forEach(text => {
-                    text.classList.toggle('hidden');
-                    text.classList.toggle('md:inline-block');
+            // Agregar animaciones al hacer scroll
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('animate-fade-in');
+                    }
                 });
-                
-                // Toggle icons position
-                sidebarItems.forEach(item => {
-                    item.classList.toggle('justify-center');
-                    item.classList.toggle('px-6');
-                });
-            });
-            
-            // Close sidebar on mobile when clicking outside
-            document.addEventListener('click', function(event) {
-                if (window.innerWidth < 768 && !sidebar.contains(event.target) && event.target !== toggleSidebar) {
-                    sidebar.classList.add('hidden');
-                    mainContent.classList.remove('md:ml-64');
-                }
+            }, observerOptions);
+
+            // Observar todas las tarjetas
+            document.querySelectorAll('.card-hover').forEach(card => {
+                observer.observe(card);
             });
         });
     </script>
-</head>
-<body class="bg-gray-100 overflow-hidden">
- <div class="w-[1440px] h-[900px] relative bg-white overflow-hidden">
-
- <?php include('navbar.view.php') ?>
-  <div class="w-8 h-0 left-[396px] top-[115px] absolute shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] outline outline-4 outline-offset-[-2px] outline-neutral-500"></div>
-  <div class="w-[1309px] h-0 left-[30px] top-[134px] absolute outline outline-2 outline-offset-[-1px] outline-stone-400/90"></div>
-  <div class="left-[97px] top-[321px] absolute text-center justify-start text-black text-xl font-bold font-['Roboto']">FILTRO SELECCIONADO</div>
-  <div class="w-28 h-5 left-[109px] top-[422px] absolute text-center justify-start text-teal-700 text-xl font-bold font-['Roboto']">Categoría</div>
-  <div class="w-64 h-80 left-[84px] top-[379px] absolute bg-stone-300/0 rounded-[10px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] border border-black"></div>
-  <div class="w-56 h-36 left-[107px] top-[507px] absolute text-center justify-start text-stone-500/90 text-xl font-bold font-['Roboto']">Este sistema esta diseñado para que puedas llevar el control de tus signoss vitales</div>
-  <div class="w-[907px] h-32 left-[396px] top-[172px] absolute bg-emerald-300/80 rounded-[20px]"></div>
-  <div class="w-[464px] h-16 left-[613px] top-[208px] absolute text-center justify-start text-black text-4xl font-bold font-['Roboto']">Bienvenido a Healt Mate</div>
-  <div class="w-72 h-96 left-[1008px] top-[337px] absolute bg-stone-300/30 rounded-[10px]"></div>
-  <div class="w-44 h-10 left-[1061px] top-[668px] absolute bg-teal-700 rounded-2xl"></div>
-  <div class="left-[1129px] top-[677px] absolute text-center justify-start text-white text-xl font-bold font-['Roboto']">VER</div>
-  <div class="w-36 left-[1081px] top-[604px] absolute text-center justify-start text-zinc-700 text-lg font-bold font-['Roboto']">Alimentate Sanamente</div>
-  <div class="w-52 h-16 left-[747px] top-[659px] absolute bg-teal-700 rounded-2xl"></div>
-  <div class="w-48 left-[758px] top-[668px] absolute text-center justify-start text-white text-xl font-bold font-['Roboto']">Parametros De Los Signos Vitales</div>
-  <div class="w-72 h-96 left-[412px] top-[337px] absolute bg-stone-300/30 rounded-[10px]"></div>
-  <div class="w-52 h-14 left-[452px] top-[665px] absolute bg-teal-700 rounded-2xl"></div>
-  <div class="w-36 left-[478px] top-[679px] absolute text-center justify-start text-white text-xl font-bold font-['Roboto']">ALIMENTACION</div>
-  <img class="w-48 h-48 left-[460px] top-[422px] absolute" src="<?= constant("URL") ?>public/img/PX/BA.png" />
-  <img class="w-52 h-52 left-[758px] top-[379px] absolute" src="<?= constant("URL") ?>public/img/PX/S1.png" />
-  <img class="w-48 h-48 left-[1056px] top-[375px] absolute" src="<?= constant("URL") ?>public/img/PX/S3.png" />
-  <div class="w-24 h-0 left-[1259px] top-[830px] absolute border-[14px] border-black"></div>
-</div>
+</body>
+</html>

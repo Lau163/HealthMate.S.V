@@ -1,7 +1,11 @@
 Options +FollowSymLinks -MultiViews
 RewriteEngine On
 
-# Asegurarse de que no sea un directorio o archivo existente
+# Permitir acceso directo a archivos PHP específicos (limpiadores, utilidades)
+RewriteCond %{REQUEST_URI} ^/session_cleaner\.php$ [NC]
+RewriteRule ^(.*)$ $1 [L]
+
+# Permitir acceso directo a archivos existentes (imágenes, CSS, JS, etc.)
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-l

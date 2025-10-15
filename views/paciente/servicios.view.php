@@ -76,7 +76,8 @@
                                     TEMPERATURA CORPORAL
                                 </p>
                             </div>
-                            <button class="bg-teal-700 hover:bg-teal-800 active:bg-teal-900 text-white text-base md:text-lg lg:text-xl font-bold py-2 md:py-3 px-6 md:px-8 rounded-2xl transition-colors w-full">
+                            <button onclick="openModal('temperatura')"
+                                    class="bg-teal-700 hover:bg-teal-800 active:bg-teal-900 text-white text-base md:text-lg lg:text-xl font-bold py-2 md:py-3 px-6 md:px-8 rounded-2xl transition-colors w-full">
                                 REGISTRAR
                             </button>
                         </div>
@@ -91,7 +92,8 @@
                                     SATURACIÓN SANGUÍNEA
                                 </p>
                             </div>
-                            <button class="bg-teal-700 hover:bg-teal-800 active:bg-teal-900 text-white text-base md:text-lg lg:text-xl font-bold py-2 md:py-3 px-6 md:px-8 rounded-2xl transition-colors w-full">
+                            <button onclick="openModal('saturacion')"
+                                    class="bg-teal-700 hover:bg-teal-800 active:bg-teal-900 text-white text-base md:text-lg lg:text-xl font-bold py-2 md:py-3 px-6 md:px-8 rounded-2xl transition-colors w-full">
                                 REGISTRAR
                             </button>
                         </div>
@@ -106,7 +108,8 @@
                                     FRECUENCIA CARDÍACA
                                 </p>
                             </div>
-                            <button class="bg-teal-700 hover:bg-teal-800 active:bg-teal-900 text-white text-base md:text-lg lg:text-xl font-bold py-2 md:py-3 px-6 md:px-8 rounded-2xl transition-colors w-full">
+                            <button onclick="openModal('frecuencia')"
+                                    class="bg-teal-700 hover:bg-teal-800 active:bg-teal-900 text-white text-base md:text-lg lg:text-xl font-bold py-2 md:py-3 px-6 md:px-8 rounded-2xl transition-colors w-full">
                                 REGISTRAR
                             </button>
                         </div>
@@ -121,7 +124,8 @@
                                     PRESIÓN ARTERIAL
                                 </p>
                             </div>
-                            <button class="bg-teal-700 hover:bg-teal-800 active:bg-teal-900 text-white text-base md:text-lg lg:text-xl font-bold py-2 md:py-3 px-6 md:px-8 rounded-2xl transition-colors w-full">
+                            <button onclick="openModal('presion')"
+                                    class="bg-teal-700 hover:bg-teal-800 active:bg-teal-900 text-white text-base md:text-lg lg:text-xl font-bold py-2 md:py-3 px-6 md:px-8 rounded-2xl transition-colors w-full">
                                 REGISTRAR
                             </button>
                         </div>
@@ -136,7 +140,8 @@
                                     FRECUENCIA RESPIRATORIA
                                 </p>
                             </div>
-                            <button class="bg-teal-700 hover:bg-teal-800 active:bg-teal-900 text-white text-base md:text-lg lg:text-xl font-bold py-2 md:py-3 px-6 md:px-8 rounded-2xl transition-colors w-full">
+                            <button onclick="openModal('respiratoria')"
+                                    class="bg-teal-700 hover:bg-teal-800 active:bg-teal-900 text-white text-base md:text-lg lg:text-xl font-bold py-2 md:py-3 px-6 md:px-8 rounded-2xl transition-colors w-full">
                                 REGISTRAR
                             </button>
                         </div>
@@ -151,7 +156,8 @@
                                     PULSO
                                 </p>
                             </div>
-                            <button class="bg-teal-700 hover:bg-teal-800 active:bg-teal-900 text-white text-base md:text-lg lg:text-xl font-bold py-2 md:py-3 px-6 md:px-8 rounded-2xl transition-colors w-full">
+                            <button onclick="openModal('pulso')"
+                                    class="bg-teal-700 hover:bg-teal-800 active:bg-teal-900 text-white text-base md:text-lg lg:text-xl font-bold py-2 md:py-3 px-6 md:px-8 rounded-2xl transition-colors w-full">
                                 REGISTRAR
                             </button>
                         </div>
@@ -162,7 +168,130 @@
             </div>
             
         </main>
-        
-    </div>
-</body>
+
+        <!-- Modals para cada servicio -->
+        <div id="modal-overlay" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
+            <div id="modal-container" class="flex items-center justify-center min-h-screen p-4">
+                <div class="bg-white rounded-lg shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+                    <!-- Header del modal -->
+                    <div class="bg-teal-600 text-white p-4 rounded-t-lg">
+                        <div class="flex justify-between items-center">
+                            <h3 id="modal-title" class="text-lg font-bold"></h3>
+                            <button onclick="closeModal()" class="text-white hover:text-gray-200 text-xl">&times;</button>
+                        </div>
+                    </div>
+
+                    <!-- Contenido del modal -->
+                    <div class="p-6">
+                        <form id="vital-signs-form">
+                            <!-- Campos que se mostrarán según el tipo de signo vital -->
+                            <div id="form-fields">
+                                <!-- Los campos se insertarán dinámicamente aquí -->
+                            </div>
+
+                            <!-- Botones -->
+                            <div class="flex gap-3 mt-6">
+                                <button type="button" onclick="closeModal()"
+                                        class="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-800 py-2 px-4 rounded-lg transition-colors">
+                                    Cancelar
+                                </button>
+                                <button type="submit"
+                                        class="flex-1 bg-teal-600 hover:bg-teal-700 text-white py-2 px-4 rounded-lg transition-colors">
+                                    Guardar
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            // Función para abrir modal
+            function openModal(type) {
+                const overlay = document.getElementById('modal-overlay');
+                const title = document.getElementById('modal-title');
+                const fields = document.getElementById('form-fields');
+
+                // Configurar título según el tipo
+                const titles = {
+                    'temperatura': 'Registrar Temperatura Corporal',
+                    'saturacion': 'Registrar Saturación Sanguínea',
+                    'frecuencia': 'Registrar Frecuencia Cardíaca',
+                    'presion': 'Registrar Presión Arterial',
+                    'respiratoria': 'Registrar Frecuencia Respiratoria',
+                    'pulso': 'Registrar Pulso'
+                };
+
+                title.textContent = titles[type] || 'Registrar Signo Vital';
+
+                // Configurar campos según el tipo
+                fields.innerHTML = getFormFields(type);
+
+                overlay.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            }
+
+            // Función para cerrar modal
+            function closeModal() {
+                const overlay = document.getElementById('modal-overlay');
+                overlay.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+            }
+
+            // Función para obtener campos del formulario según el tipo
+            function getFormFields(type) {
+                const fieldConfigs = {
+                    'temperatura': [
+                        { label: 'Temperatura (°C)', name: 'temperatura', type: 'number', step: '0.1', placeholder: '36.5' }
+                    ],
+                    'saturacion': [
+                        { label: 'Saturación de Oxígeno (%)', name: 'saturacion', type: 'number', placeholder: '98' }
+                    ],
+                    'frecuencia': [
+                        { label: 'Frecuencia Cardíaca (lpm)', name: 'frecuencia', type: 'number', placeholder: '72' }
+                    ],
+                    'presion': [
+                        { label: 'Presión Sistólica (mmHg)', name: 'sistolica', type: 'number', placeholder: '120' },
+                        { label: 'Presión Diastólica (mmHg)', name: 'diastolica', type: 'number', placeholder: '80' }
+                    ],
+                    'respiratoria': [
+                        { label: 'Frecuencia Respiratoria (rpm)', name: 'respiratoria', type: 'number', placeholder: '16' }
+                    ],
+                    'pulso': [
+                        { label: 'Pulso (lpm)', name: 'pulso', type: 'number', placeholder: '72' }
+                    ]
+                };
+
+                const config = fieldConfigs[type] || [];
+                return config.map(field => `
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="${field.name}">
+                            ${field.label}
+                        </label>
+                        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                               id="${field.name}" name="${field.name}" type="${field.type}" step="${field.step || ''}" placeholder="${field.placeholder}" required>
+                    </div>
+                `).join('');
+            }
+
+            // Manejar envío del formulario
+            document.getElementById('vital-signs-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                // Aquí puedes agregar la lógica para guardar los datos
+                // Por ejemplo, hacer una petición AJAX al servidor
+
+                alert('Datos guardados correctamente!');
+                closeModal();
+            });
+
+            // Cerrar modal al hacer clic fuera de él
+            document.getElementById('modal-overlay').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeModal();
+                }
+            });
+        </script>
+    </body>
 </html>

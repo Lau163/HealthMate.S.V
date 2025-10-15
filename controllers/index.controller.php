@@ -1,13 +1,64 @@
 <?php
 class Index extends ControllerBase
 {
+    public $usuarioModel;
+
     function __construct()
     {
         parent::__construct();
+        $this->loadModel("usuario");
     }
+
     function render(){
         $this->view->render('index/index');
-    } public function register() {
+    }
+
+    public function sessionCleaner() {
+        // Función para limpiar completamente las sesiones
+        function limpiarSesionesCompletamente() {
+            // Iniciar sesión si no está iniciada
+            if (session_status() === PHP_SESSION_NONE) {
+                session_start();
+            }
+
+            // Destruir la sesión actual
+            session_unset();
+            session_destroy();
+
+            // Limpiar cookies de sesión
+            if (isset($_COOKIE[session_name()])) {
+                setcookie(session_name(), '', time()-42000, '/');
+            }
+
+            // Crear nueva sesión limpia
+            session_start();
+            session_regenerate_id(true);
+
+            return true;
+        }
+
+        // Función para redirigir limpiamente
+        function redirigirLimpio($url) {
+            // Limpiar cualquier output buffer
+            if (ob_get_level()) {
+                ob_clean();
+            }
+
+            // Headers para evitar cache
+            header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+            header("Cache-Control: post-check=0, pre-check=0", false);
+            header("Pragma: no-cache");
+
+            header("Location: $url");
+            exit;
+        }
+
+        // Procesar la limpieza
+        limpiarSesionesCompletamente();
+        redirigirLimpio(BASE_URL);
+    }
+
+    public function register() {
         // Si es GET, renderizar el formulario de registro
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             $error = $_SESSION['error'] ?? null;
@@ -31,13 +82,13 @@ class Index extends ControllerBase
             if ($edad === false) {
                 throw new Exception('La edad debe ser un número entre 1 y 120 años.');
             }
-            $sexo = in_array(strtolower(trim($_POST['sexo'] ?? '')), ['masculino', 'femenino', 'otro']) ? 
+            $sexo = in_array(strtolower(trim($_POST['sexo'] ?? '')), ['masculino', 'femenino', 'otro']) ?
                    strtolower(trim($_POST['sexo'])) : '';
-            
+
             // Validar y formatear números flotantes
             $peso = filter_var(trim($_POST['peso'] ?? '0'), FILTER_VALIDATE_FLOAT, ['options' => ['min_range' => 0]]);
             $altura = filter_var(trim($_POST['altura'] ?? '0'), FILTER_VALIDATE_FLOAT, ['options' => ['min_range' => 0]]);
-            
+
             // Sanitizar texto libre
             $tipoSangre = htmlspecialchars(trim($_POST['tipo_sangre'] ?? ''), ENT_QUOTES, 'UTF-8');
             $alergias = htmlspecialchars(trim($_POST['alergias'] ?? ''), ENT_QUOTES, 'UTF-8');
@@ -54,7 +105,7 @@ class Index extends ControllerBase
 
             // Obtener roles disponibles
             $roles = $this->usuarioModel->obtenerRolesDisponibles();
-            
+
             // Buscar el rol de paciente (si existe)
             $idRol = null;
             foreach ($roles as $rol) {
@@ -63,12 +114,12 @@ class Index extends ControllerBase
                     break;
                 }
             }
-            
+
             // Si no se encontró el rol de paciente, usar el primer rol disponible
             if ($idRol === null && !empty($roles)) {
                 $idRol = $roles[0]['Id_Rol'];
             }
-            
+
             // Si no hay roles disponibles, mostrar error
             if ($idRol === null) {
                 throw new Exception('No se encontraron roles disponibles en el sistema. Contacta al administrador.');
@@ -103,7 +154,7 @@ class Index extends ControllerBase
             $_SESSION['form_data'] = $_POST;
             // Cambiar a la pestaña de registro
             $_SESSION['active_tab'] = 'register';
-            header('Location: ' . BASE_URL . '');
+            header('Location: ' . BASE_URL);
             exit;
         }
     }

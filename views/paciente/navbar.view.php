@@ -21,7 +21,7 @@
                    class="text-black hover:text-teal-700 text-lg font-normal font-['Baloo_Chettan'] transition-colors">
                     Home
                 </a>
-                <a href="<?= constant("URL") ?>paciente/ParametrosSV" 
+                <a href="<?= constant("URL") ?>paciente/ParametrosSV/" 
                    class="text-black hover:text-teal-700 text-lg font-normal font-['Baloo_Chettan'] transition-colors">
                     Signos Vitales
                 </a>
