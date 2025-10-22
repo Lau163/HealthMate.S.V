@@ -58,40 +58,34 @@ views/doctor/
 - **Estados interactivos**: Loading, success, error states
 - **Accesibilidad**: Navegación por teclado y screen readers
 
-## Cómo usar el layout base
+## Cómo acceder a las nuevas vistas
 
-### En el controlador:
-```php
-public function algunaAccion() {
-    // Datos para la vista
-    $data = [
-        'title' => 'Título de la página',
-        'pageTitle' => 'Título que aparece en el header',
-        'estadisticas' => $this->getEstadisticas(),
-        'consejos' => $this->getConsejos(),
-        // ... otros datos
-    ];
+### 🚀 **Acceso con Debug (para desarrollo)**
+Para probar las vistas sin necesidad de login, usa el parámetro `?debug=1`:
 
-    // Renderizar con layout
-    $content = $this->renderPartial('doctor/nueva_vista');
-    echo $this->renderWithLayout($content, $data);
-}
-```
+- **Estadísticas**: `http://localhost/HealthMate.S.V/doctor/estadisticas?debug=1`
+- **Consejos**: `http://localhost/HealthMate.S.V/doctor/consejos?debug=1`
+- **Dar Consejos**: `http://localhost/HealthMate.S.V/doctor/dar_consejos?debug=1`
+- **Dashboard**: `http://localhost/HealthMate.S.V/doctor?debug=1`
 
-### En la vista (ejemplo):
-```php
-<?php
-// Configurar variables para el layout
-$title = 'Estadísticas - HealthMate';
-$pageTitle = 'ESTADÍSTICAS';
-?>
+### 🔐 **Acceso Normal (con autenticación)**
+Para usar las vistas con el sistema de autenticación completo:
 
-<!-- Contenido de la página -->
-<div class="bg-white rounded-lg shadow-sm p-6">
-    <h1 class="text-2xl font-bold text-gray-800 mb-4">Mis Estadísticas</h1>
-    <!-- Tu contenido aquí -->
-</div>
-```
+1. Ve a `http://localhost/HealthMate.S.V/auth/login`
+2. Inicia sesión como doctor
+3. Navega a las siguientes URLs:
+   - `http://localhost/HealthMate.S.V/doctor/estadisticas`
+   - `http://localhost/HealthMate.S.V/doctor/consejos`
+   - `http://localhost/HealthMate.S.V/doctor/dar_consejos`
+
+### 🛠️ **Debugging**
+Si tienes problemas, visita: `http://localhost/HealthMate.S.V/debug.php`
+
+Este script te mostrará:
+- ✅ Estado del servidor
+- ✅ Configuración de URLs
+- ✅ Archivos disponibles
+- ✅ Enlaces de prueba directos
 
 ## Características del nuevo sistema
 - ✅ Datos dinámicos desde el controlador

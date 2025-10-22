@@ -33,51 +33,51 @@ if (!isset($_SESSION['usuario_id'])) {
             <nav class="mt-8">
                 <div class="px-2 space-y-1">
                     <!-- Dashboard -->
-                    <a href="<?php echo BASE_URL; ?>doctor" class="sidebar-item flex items-center px-6 py-3 text-sm font-medium rounded-md text-emerald-600 bg-emerald-50">
+                    <a href="<?php echo BASE_URL; ?>doctor/inicio?debug=1" class="sidebar-item flex items-center px-6 py-3 text-sm font-medium rounded-md text-emerald-600 bg-emerald-50">
                         <i class="fas fa-home text-lg"></i>
                         <span class="sidebar-text ml-3 hidden md:inline-block">Inicio</span>
                     </a>
 
                     <!-- Doctor -->
-                    <a href="<?php echo BASE_URL; ?>doctor/perfil" class="sidebar-item flex items-center px-6 py-3 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-50">
+                    <a href="<?php echo BASE_URL; ?>doctor/perfil?debug=1" class="sidebar-item flex items-center px-6 py-3 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-50">
                         <i class="fas fa-user-md text-lg"></i>
                         <span class="sidebar-text ml-3 hidden md:inline-block">Mi Perfil</span>
                     </a>
 
                     <!-- Pacientes -->
-                    <a href="<?php echo BASE_URL; ?>doctor/pacientes" class="sidebar-item flex items-center px-6 py-3 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-50">
+                    <a href="<?php echo BASE_URL; ?>doctor/pacientes?debug=1" class="sidebar-item flex items-center px-6 py-3 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-50">
                         <i class="fas fa-users text-lg"></i>
                         <span class="sidebar-text ml-3 hidden md:inline-block">Pacientes</span>
                     </a>
 
                     <!-- Consultas -->
-                    <a href="<?php echo BASE_URL; ?>doctor/consultas" class="sidebar-item flex items-center px-6 py-3 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-50">
+                    <a href="<?php echo BASE_URL; ?>doctor/consultas?debug=1" class="sidebar-item flex items-center px-6 py-3 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-50">
                         <i class="far fa-calendar-alt text-lg"></i>
                         <span class="sidebar-text ml-3 hidden md:inline-block">Consultas</span>
                     </a>
 
                     <!-- Historial Clínico -->
-                    <a href="<?php echo BASE_URL; ?>doctor/historial" class="sidebar-item flex items-center px-6 py-3 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-50">
+                    <a href="<?php echo BASE_URL; ?>doctor/historial_clinico?debug=1" class="sidebar-item flex items-center px-6 py-3 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-50">
                         <i class="fas fa-file-medical text-lg"></i>
                         <span class="sidebar-text ml-3 hidden md:inline-block">Historial Clínico</span>
                     </a>
 
                     <!-- Medicamentos -->
-                    <a href="<?php echo BASE_URL; ?>doctor/medicamentos" class="sidebar-item flex items-center px-6 py-3 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-50">
+                    <a href="<?php echo BASE_URL; ?>doctor/medicamentos?debug=1" class="sidebar-item flex items-center px-6 py-3 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-50">
                         <i class="fas fa-pills text-lg"></i>
                         <span class="sidebar-text ml-3 hidden md:inline-block">Medicamentos</span>
                     </a>
 
                     <!-- Estadísticas -->
-                    <a href="<?php echo BASE_URL; ?>doctor/estadisticas" class="sidebar-item flex items-center px-6 py-3 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-50">
+                    <a href="<?php echo BASE_URL; ?>doctor/estadisticas?debug=1" class="sidebar-item flex items-center px-6 py-3 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-50">
                         <i class="fas fa-chart-bar text-lg"></i>
                         <span class="sidebar-text ml-3 hidden md:inline-block">Estadísticas</span>
                     </a>
 
-                    <!-- Configuración -->
-                    <a href="<?php echo BASE_URL; ?>doctor/configuracion" class="sidebar-item flex items-center px-6 py-3 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-50">
-                        <i class="fas fa-cog text-lg"></i>
-                        <span class="sidebar-text ml-3 hidden md:inline-block">Configuración</span>
+                    <!-- Consejos -->
+                    <a href="<?php echo BASE_URL; ?>doctor/consejos?debug=1" class="sidebar-item flex items-center px-6 py-3 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-50">
+                        <i class="fas fa-heart text-lg"></i>
+                        <span class="sidebar-text ml-3 hidden md:inline-block">Consejos</span>
                     </a>
                 </div>
             </nav>

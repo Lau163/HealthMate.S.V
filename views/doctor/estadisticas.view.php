@@ -3,8 +3,8 @@
 $title = 'Gráficos y Estadísticas - HealthMate';
 $pageTitle = 'GRÁFICOS Y ESTADÍSTICAS';
 
-// Obtener datos para los gráficos
-$estadisticas = $this->get('estadisticas') ?? [
+// Obtener datos para los gráficos (ya configurados por el controlador)
+$estadisticas = $estadisticas ?? [
     'totalPacientes' => 150,
     'citasMes' => 320,
     'ingresosMensuales' => 45000,
@@ -13,8 +13,8 @@ $estadisticas = $this->get('estadisticas') ?? [
     'citasCompletadas' => 295
 ];
 
-// Datos de ejemplo para gráficos (en un caso real vendrían del controlador)
-$datosGraficos = $this->get('datosGraficos') ?? [
+// Datos de ejemplo para gráficos (ya configurados por el controlador)
+$datosGraficos = $datosGraficos ?? [
     'mensual' => [
         'enero' => 45, 'febrero' => 52, 'marzo' => 48, 'abril' => 61,
         'mayo' => 55, 'junio' => 67, 'julio' => 58, 'agosto' => 63,
