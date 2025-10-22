@@ -1,6 +1,11 @@
 <?php
 class Doctor extends ControllerBase
 {
+    // Declarar propiedades correctamente para evitar errores de PHP 8.2+
+    protected $usuario;
+    protected $doctor;
+    protected $paciente;
+
     function __construct() {
         parent::__construct();
         
@@ -264,7 +269,7 @@ class Doctor extends ControllerBase
     // Mostrar formulario de edición o actualizar un doctor (según método)
     public function editar($params = [])
     {
-        if (!$this->model) { $this->view->render('doctor/doctor'); return; }
+        if (!$this->doctor) { $this->view->render('doctor/doctor'); return; }
 
         $id = isset($params[0]) ? (int)$params[0] : 0;
         if ($id <= 0) {
@@ -286,7 +291,7 @@ class Doctor extends ControllerBase
                 'Enfermedades' => $_POST['Enfermedades'] ?? null,
             ];
             try {
-                $this->model->updateById($id, $datos);
+                $this->doctor->updateById($id, $datos);
                 $_SESSION['success'] = 'Doctor actualizado correctamente';
                 header('Location: ' . BASE_URL . 'doctor');
                 exit;
@@ -296,7 +301,7 @@ class Doctor extends ControllerBase
                 exit;
             }
         } else {
-            $doctor = $this->model->getById($id);
+            $doctor = $this->doctor->getById($id);
             if (!$doctor) {
                 $_SESSION['error'] = 'Doctor no encontrado';
                 header('Location: ' . BASE_URL . 'doctor');
@@ -323,7 +328,7 @@ class Doctor extends ControllerBase
         }
 
         try {
-            $this->model->deleteById($id);
+            $this->doctor->deleteById($id);
             $_SESSION['success'] = 'Doctor eliminado correctamente';
         } catch (Throwable $th) {
             $_SESSION['error'] = 'No se pudo eliminar el doctor';
@@ -364,7 +369,7 @@ class Doctor extends ControllerBase
 
         try {
             // Insertar en la base de datos
-            $resultado = $this->model->insert($datos);
+            $resultado = $this->paciente->insert($datos);
             
             if ($resultado) {
                 $_SESSION['mensaje'] = 'Paciente registrado exitosamente';

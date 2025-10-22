@@ -13,10 +13,10 @@
                         <span class="sidebar-text ml-3 hidden md:inline-block">Doctor</span>
                     </a>
                     
-                    <!-- Reservas -->
+                    <!-- Consultas -->
                     <a href="#" class="sidebar-item flex items-center px-6 py-3 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-50">
                         <i class="far fa-calendar-alt text-lg"></i>
-                        <span class="sidebar-text ml-3 hidden md:inline-block">Reservas</span>
+                        <span class="sidebar-text ml-3 hidden md:inline-block">Consultas</span>
                     </a>
                     
                     <!-- Servicios -->
@@ -28,13 +28,13 @@
                     <!-- Mascotas -->
                     <a href="#" class="sidebar-item flex items-center px-6 py-3 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-50">
                         <i class="fas fa-paw text-lg"></i>
-                        <span class="sidebar-text ml-3 hidden md:inline-block">Mascotas</span>
+                        <span class="sidebar-text ml-3 hidden md:inline-block">historiales clinicos</span>
                     </a>
                     
                     <!-- Reportes -->
                     <a href="#" class="sidebar-item flex items-center px-6 py-3 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-50">
                         <i class="fas fa-chart-bar text-lg"></i>
-                        <span class="sidebar-text ml-3 hidden md:inline-block">Reportes</span>
+                        <span class="sidebar-text ml-3 hidden md:inline-block">Estadistica de consultas</span>
                     </a>
                 </div>
             </nav>
