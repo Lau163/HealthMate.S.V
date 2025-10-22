@@ -193,10 +193,8 @@ class UsuarioModel extends ModelBase {
      * Crea un nuevo usuario en la base de datos.
      */
     public function crear($datos) {
-        $usuarioExistente = $this->buscarPorEmail($datos['Email']);
-        if ($usuarioExistente) {
-            throw new Exception('El correo electrónico ya está registrado.');
-        }
+        // Nota: La verificación de email existente debe hacerse en el controlador
+        // para permitir lógica más compleja (usuarios inactivos, etc.)
 
         $datos['Password'] = password_hash($datos['Password'], PASSWORD_DEFAULT);
 
@@ -277,5 +275,67 @@ class UsuarioModel extends ModelBase {
         $stmt->execute();
         
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    /**
+     * Crea un nuevo paciente con documentos
+     */
+    public function crearPaciente($datosPaciente, $documentos = []) {
+        try {
+            // Preparar datos para el usuario
+            $datosUsuario = [
+                'Id_Rol' => 4, // Rol de paciente
+                'Nombre' => $datosPaciente['nombre'],
+                'Email' => $datosPaciente['email'],
+                'Password' => password_hash('temp123', PASSWORD_DEFAULT),
+                'Edad' => $datosPaciente['edad'],
+                'Sexo' => $datosPaciente['genero'],
+                'Peso' => $datosPaciente['peso'],
+                'Altura' => $datosPaciente['altura'],
+                'Tipo_sangre' => $datosPaciente['tipo_sangre'],
+                'Alergias' => $datosPaciente['alergias'],
+                'Enfermedades' => trim(($datosPaciente['enfermedades'] ?? '') . ' ' . ($datosPaciente['medicamentos'] ?? ''))
+            ];
+
+            // Crear el usuario
+            $idPaciente = $this->crear($datosUsuario);
+
+            if ($idPaciente) {
+                // Si hay documentos, guardarlos
+                if (!empty($documentos)) {
+                    $this->guardarDocumentosPaciente($idPaciente, $documentos);
+                }
+
+                return $idPaciente;
+            }
+
+            return false;
+        } catch (Exception $e) {
+            error_log("Error en crearPaciente: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Guarda los documentos de un paciente
+     */
+    private function guardarDocumentosPaciente($idPaciente, $documentos) {
+        try {
+            $query = "INSERT INTO documentos_pacientes (Id_Usuario, Nombre_Archivo, Ruta_Archivo, Tipo_Archivo, Tamano_Archivo, Fecha_Subida)
+                     VALUES (:id_usuario, :nombre, :ruta, :tipo, :tamano, NOW())";
+
+            $stmt = $this->con->pdo->prepare($query);
+
+            foreach ($documentos as $documento) {
+                $stmt->execute([
+                    ':id_usuario' => $idPaciente,
+                    ':nombre' => $documento['nombre'],
+                    ':ruta' => $documento['ruta'],
+                    ':tipo' => $documento['tipo'],
+                    ':tamano' => $documento['tamano']
+                ]);
+            }
+        } catch (PDOException $e) {
+            error_log("Error guardando documentos: " . $e->getMessage());
+        }
     }
 }

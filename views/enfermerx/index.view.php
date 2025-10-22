@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="<?= $_SESSION['csrf_token'] ?? '' ?>">
     <title>Enfermerx | HealthMate</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -355,6 +356,22 @@
     </div>
     
     <script>
+        // Funciones para abrir y cerrar modales
+        function abrirModal(modalId) {
+            document.getElementById(modalId).classList.remove('hidden');
+            document.body.classList.add('overflow-hidden');
+        }
+
+        function cerrarModal(modalId) {
+            document.getElementById(modalId).classList.add('hidden');
+            document.body.classList.remove('overflow-hidden');
+        }
+
+        // Función para abrir el modal de nuevo paciente
+        function abrirModalNuevoPaciente() {
+            document.getElementById('nuevoPacienteModal').classList.remove('hidden');
+        }
+
         // Funciones para manejar pacientes
         function verPaciente(paciente) {
             // Formatear los datos del paciente para mostrarlos
@@ -524,6 +541,7 @@
             </div>
             
             <form id="formNuevoPaciente" action="<?= BASE_URL ?>enfermerx/guardarPaciente" method="POST">
+                <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?? '' ?>">
                 <div class="space-y-4">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>

@@ -267,110 +267,78 @@ class Enfermerx extends ControllerBase
             exit;
         }
     }
-    
     /**
-     * Guarda un nuevo paciente desde el modal
+     * Muestra el formulario para crear un nuevo paciente
      */
-    public function guardarPaciente() {
-        // Verificar que sea una petición AJAX
-        $isAjax = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && 
-                 strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
-        
-        // Verificar que el usuario esté autenticado
-        if (!isset($_SESSION['usuario_id'])) {
-            if ($isAjax) {
-                header('Content-Type: application/json');
-                echo json_encode([
-                    'success' => false,
-                    'message' => 'No autorizado. Por favor, inicia sesión.'
-                ]);
-                exit;
-            } else {
-                header('Location: ' . BASE_URL . 'auth');
-                exit;
-            }
-        }
-
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            // Método no permitido
-            if ($isAjax) {
-                header('Content-Type: application/json');
-                http_response_code(405);
-                echo json_encode([
-                    'success' => false,
-                    'message' => 'Método no permitido. Se esperaba una petición POST.'
-                ]);
-            } else {
-                $_SESSION['error'] = 'Método no permitido';
-                header('Location: ' . BASE_URL . 'enfermerx');
-            }
+    public function nuevo() {
+        // Verificar que sea una petición GET
+        if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
+            header('Location: ' . BASE_URL . 'enfermerx');
             exit;
         }
 
-        try {
-            // Depuración: Registrar los datos recibidos
-            error_log('Datos recibidos en guardarPaciente (enfermerx): ' . print_r($_POST, true));
-            
-            // Validar que el modelo de usuario esté cargado
-            if (!$this->usuario) {
-                $error = 'Error: No se pudo cargar el modelo de usuario';
-                error_log($error);
-                throw new Exception($error);
-            }
+        // Renderizar la vista del formulario
+        $this->view->render('enfermerx/nuevo_paciente');
+    }
+    public function guardarPaciente() {
+        // Verificar que sea una petición AJAX
+        $isAjax = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) &&
+                 strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
 
-            // Validar datos requeridos
-            $errores = [];
-            if (empty(trim($_POST['nombre'] ?? ''))) {
-                $errores[] = 'El nombre es obligatorio';
-            }
-            if (empty(trim($_POST['email'] ?? ''))) {
-                $errores[] = 'El correo electrónico es obligatorio';
-            } elseif (!filter_var(trim($_POST['email']), FILTER_VALIDATE_EMAIL)) {
-                $errores[] = 'El formato del correo electrónico no es válido';
-            }
-            
-            if (!empty($errores)) {
-                throw new Exception(implode(', ', $errores));
-            }
-            
-            $email = trim($_POST['email']);
-            
-            // Preparar datos del paciente
-            $datosPaciente = [
-                'Id_Rol' => 4, // ID del rol de paciente
-                'Nombre' => trim($_POST['nombre']), // Usar el nombre directamente del campo 'nombre'
-                'Email' => $email,
-                'Password' => password_hash('temp123', PASSWORD_DEFAULT), // Contraseña temporal
-                'Edad' => !empty($_POST['edad']) ? (int)$_POST['edad'] : null,
-                'Sexo' => $_POST['genero'] ?? null, // Cambiado de 'sexo' a 'genero' para coincidir con el formulario
-                'Peso' => !empty($_POST['peso']) ? (float)$_POST['peso'] : null,
-                'Altura' => !empty($_POST['altura']) ? (float)$_POST['altura'] : null,
-                'Tipo_sangre' => $_POST['tipo_sangre'] ?? null,
-                'Alergias' => trim($_POST['alergias'] ?? ''),
-                'Enfermedades' => trim($_POST['enfermedades'] ?? ''),
-                'Activo' => 1,
-                'Fecha_Creacion' => date('Y-m-d H:i:s')
-            ];
-            
-            // Verificar si el correo ya existe (incluyendo inactivos)
-            $usuarioExistente = $this->usuario->buscarPorEmail($email, false, false);
-            if ($usuarioExistente) {
-                if ($usuarioExistente['Activo'] == 1) {
-                    throw new Exception('El correo electrónico ya está registrado');
-                } else {
-                    // Si el usuario existe pero está inactivo, actualizarlo en lugar de crear uno nuevo
-                    $datosPaciente['Id_Usuario'] = $usuarioExistente['Id_Usuario'];
-                    
-                    // Actualizar el usuario existente con los nuevos datos
-                    $idPaciente = $this->usuario->actualizar($usuarioExistente['Id_Usuario'], $datosPaciente);
-                    
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            try {
+                // Validar token CSRF
+                if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== ($_SESSION['csrf_token'] ?? '')) {
+                    throw new Exception('Token CSRF inválido');
+                }
+
+                // Obtener y validar datos del formulario
+                $datosPaciente = [
+                    'nombre' => trim($_POST['nombre'] ?? ''),
+                    'edad' => !empty($_POST['edad']) ? (int)$_POST['edad'] : null,
+                    'genero' => $_POST['genero'] ?? null,
+                    'email' => filter_var(trim($_POST['email'] ?? ''), FILTER_VALIDATE_EMAIL),
+                    'telefono' => $_POST['telefono'] ?? null,
+                    'direccion' => $_POST['direccion'] ?? null,
+                    'tipo_sangre' => $_POST['tipo_sangre'] ?? null,
+                    'alergias' => $_POST['alergias'] ?? null,
+                    'enfermedades' => $_POST['enfermedades'] ?? null,
+                    'medicamentos' => $_POST['medicamentos'] ?? null,
+                    'peso' => !empty($_POST['peso']) ? (float)$_POST['peso'] : null,
+                    'altura' => !empty($_POST['altura']) ? (float)$_POST['altura'] : null
+                ];
+
+                // Validar campos obligatorios
+                if (empty($datosPaciente['nombre'])) {
+                    throw new Exception('El nombre es obligatorio');
+                }
+
+                if (!$datosPaciente['email']) {
+                    throw new Exception('El correo electrónico no es válido');
+                }
+
+                // Procesar documentos si se subieron
+                $documentos = [];
+                if (!empty($_FILES['documentos'])) {
+                    $documentos = $this->procesarDocumentos($_FILES['documentos']);
+                }
+
+                // Guardar en la base de datos usando el modelo
+                if (method_exists($this->paciente, 'insert')) {
+                    $idPaciente = $this->paciente->insert($datosPaciente);
+
                     if ($idPaciente) {
+                        // Procesar documentos si se subieron
+                        if (!empty($documentos)) {
+                            $this->guardarDocumentosPaciente($idPaciente, $documentos);
+                        }
+
                         $response = [
                             'success' => true,
-                            'message' => 'Paciente registrado correctamente (usuario reactivado)',
+                            'message' => 'Paciente registrado exitosamente',
                             'id' => $idPaciente
                         ];
-                        
+
                         if ($isAjax) {
                             header('Content-Type: application/json');
                             echo json_encode($response);
@@ -380,96 +348,102 @@ class Enfermerx extends ControllerBase
                         }
                         exit;
                     } else {
-                        throw new Exception('No se pudo actualizar el usuario existente');
+                        throw new Exception('Error al guardar el paciente en la base de datos');
                     }
+                } else {
+                    throw new Exception('Método insert no encontrado en el modelo');
                 }
-            }
 
-            // Depuración: Registrar los datos que se intentan guardar
-            error_log('Intentando crear paciente con datos: ' . print_r($datosPaciente, true));
-
-            // Crear el paciente con manejo de errores detallado
-            try {
-                $idPaciente = $this->usuario->create($datosPaciente);
-                
-                if ($idPaciente === false) {
-                    $errorInfo = $this->usuario->getErrorInfo();
-                    $error = 'Error al intentar crear el paciente. ';
-                    
-                    if (!empty($errorInfo)) {
-                        $error .= 'Detalles: ' . json_encode($errorInfo);
-                    } else {
-                        $error .= 'No se pudo completar la operación.';
-                    }
-                    
-                    error_log($error);
-                    throw new Exception($error);
-                }
             } catch (Exception $e) {
-                // Capturar cualquier excepción durante la creación del usuario
-                $error = 'Excepción al crear el paciente: ' . $e->getMessage();
-                error_log($error);
-                error_log('Datos del paciente: ' . print_r($datosPaciente, true));
-                
-                // Verificar si hay errores de base de datos
-                if (method_exists($this->usuario, 'getErrorInfo')) {
-                    $errorInfo = $this->usuario->getErrorInfo();
-                    if (!empty($errorInfo)) {
-                        error_log('Error de base de datos: ' . print_r($errorInfo, true));
-                    }
+                $errorMsg = $e->getMessage();
+                $response = [
+                    'success' => false,
+                    'message' => $errorMsg
+                ];
+
+                if ($isAjax) {
+                    header('Content-Type: application/json');
+                    http_response_code(400);
+                    echo json_encode($response);
+                } else {
+                    $_SESSION['error'] = $errorMsg;
+                    $_SESSION['form_data'] = $_POST;
+                    header('Location: ' . ($_SERVER['HTTP_REFERER'] ?? BASE_URL . 'enfermerx/nuevo'));
                 }
-                
-                throw new Exception('Error al intentar guardar el paciente. ' . $e->getMessage());
+                exit;
             }
-            
-            error_log('Paciente creado con ID: ' . $idPaciente);
-            
-            // Respuesta exitosa
+        } else {
             $response = [
-                'success' => true,
-                'message' => 'Paciente creado correctamente',
-                'id' => $idPaciente
+                'success' => false,
+                'message' => 'Método no permitido. Se esperaba una petición POST.'
             ];
-            
+
             if ($isAjax) {
                 header('Content-Type: application/json');
+                http_response_code(405);
                 echo json_encode($response);
             } else {
-                $_SESSION['success'] = $response['message'];
-                header('Location: ' . BASE_URL . 'enfermerx');
+                header('Location: ' . BASE_URL . 'enfermerx/nuevo');
             }
             exit;
-            
-        } catch (Exception $e) {
-            // Manejo de errores detallado
-            $errorMsg = $e->getMessage();
-            $errorDetails = [
-                'error' => $errorMsg,
-                'file' => $e->getFile(),
-                'line' => $e->getLine(),
-                'trace' => $e->getTraceAsString(),
-                'post_data' => $_POST
-            ];
-            
-            error_log('Error en guardarPaciente (enfermerx): ' . print_r($errorDetails, true));
-            
-            if ($isAjax) {
-                header('Content-Type: application/json');
-                http_response_code(400);
-                echo json_encode([
-                    'success' => false,
-                    'message' => 'Error al intentar guardar el paciente. ' . $errorMsg,
-                    'debug' => (ENVIRONMENT === 'development') ? $errorDetails : null
-                ]);
-            } else {
-                $_SESSION['error'] = 'Error al intentar guardar el paciente. ' . $errorMsg;
-                if (isset($_SERVER['HTTP_REFERER'])) {
-                    header('Location: ' . $_SERVER['HTTP_REFERER']);
-                } else {
-                    header('Location: ' . BASE_URL . 'enfermerx');
+        }
+    }
+
+    /**
+     * Procesa los documentos subidos
+     */
+    private function procesarDocumentos($archivos) {
+        $documentos = [];
+        $directorio = ROOT . 'public/documentos/pacientes/';
+
+        // Crear directorio si no existe
+        if (!file_exists($directorio)) {
+            mkdir($directorio, 0777, true);
+        }
+
+        // Procesar múltiples archivos
+        $numArchivos = is_array($archivos['name']) ? count($archivos['name']) : 0;
+
+        for ($i = 0; $i < $numArchivos; $i++) {
+            if ($archivos['error'][$i] === UPLOAD_ERR_OK) {
+                $nombreArchivo = uniqid() . '_' . basename($archivos['name'][$i]);
+                $rutaArchivo = $directorio . $nombreArchivo;
+
+                if (move_uploaded_file($archivos['tmp_name'][$i], $rutaArchivo)) {
+                    $documentos[] = [
+                        'nombre' => $archivos['name'][$i],
+                        'ruta' => 'documentos/pacientes/' . $nombreArchivo,
+                        'tipo' => $archivos['type'][$i],
+                        'tamano' => $archivos['size'][$i]
+                    ];
                 }
             }
-            exit;
+        }
+
+        return $documentos;
+    }
+
+    /**
+     * Guarda los documentos de un paciente
+     */
+    private function guardarDocumentosPaciente($idPaciente, $documentos) {
+        try {
+            $query = "INSERT INTO documentos_pacientes (Id_Usuario, Nombre_Archivo, Ruta_Archivo, Tipo_Archivo, Tamano_Archivo, Fecha_Subida)
+                     VALUES (:id_usuario, :nombre, :ruta, :tipo, :tamano, NOW())";
+
+            $stmt = $this->paciente->con->pdo->prepare($query);
+
+            foreach ($documentos as $documento) {
+                $stmt->execute([
+                    ':id_usuario' => $idPaciente,
+                    ':nombre' => $documento['nombre'],
+                    ':ruta' => $documento['ruta'],
+                    ':tipo' => $documento['tipo'],
+                    ':tamano' => $documento['tamano']
+                ]);
+            }
+        } catch (PDOException $e) {
+            error_log("Error guardando documentos: " . $e->getMessage());
         }
     }
 }

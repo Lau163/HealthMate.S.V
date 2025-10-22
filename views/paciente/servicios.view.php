@@ -69,7 +69,7 @@
                         <!-- Card 1: Temperatura Corporal -->
                         <div class="bg-stone-300/30 rounded-lg p-4 md:p-6 flex flex-col items-center justify-between min-h-[300px] md:min-h-[350px]">
                             <img class="w-36 h-36 sm:w-40 sm:h-40 md:w-44 md:h-44 object-contain mb-3 md:mb-4" 
-                                 src="<?= constant("URL") ?>public/img/PX/E.png" 
+                                 src="<?= URL ?>public/img/PX/E.png" 
                                  alt="Temperatura Corporal" />
                             <div class="text-center mb-3 md:mb-4">
                                 <p class="text-zinc-700 text-sm md:text-base lg:text-lg font-bold">
@@ -85,7 +85,7 @@
                         <!-- Card 2: Saturación Sanguínea -->
                         <div class="bg-stone-300/30 rounded-lg p-4 md:p-6 flex flex-col items-center justify-between min-h-[300px] md:min-h-[350px]">
                             <img class="w-36 h-36 sm:w-40 sm:h-40 md:w-44 md:h-44 object-contain mb-3 md:mb-4" 
-                                 src="<?= constant("URL") ?>public/img/PX/PA.png" 
+                                 src="<?= URL ?>public/img/PX/PA.png" 
                                  alt="Saturación Sanguínea" />
                             <div class="text-center mb-3 md:mb-4">
                                 <p class="text-zinc-700 text-sm md:text-base lg:text-lg font-bold">
@@ -101,7 +101,7 @@
                         <!-- Card 3: Frecuencia Cardíaca -->
                         <div class="bg-stone-300/30 rounded-lg p-4 md:p-6 flex flex-col items-center justify-between min-h-[300px] md:min-h-[350px]">
                             <img class="w-40 h-40 sm:w-44 sm:h-44 md:w-48 md:h-48 object-contain mb-3 md:mb-4" 
-                                 src="<?= constant("URL") ?>public/img/PX/B.png" 
+                                 src="<?= URL ?>public/img/PX/B.png" 
                                  alt="Frecuencia Cardíaca" />
                             <div class="text-center mb-3 md:mb-4">
                                 <p class="text-zinc-700 text-sm md:text-base lg:text-lg font-bold">
@@ -117,7 +117,7 @@
                         <!-- Card 4: Presión Arterial -->
                         <div class="bg-stone-300/30 rounded-lg p-4 md:p-6 flex flex-col items-center justify-between min-h-[300px] md:min-h-[350px]">
                             <img class="w-32 h-32 sm:w-36 sm:h-36 md:w-40 md:h-40 object-contain mb-3 md:mb-4" 
-                                 src="<?= constant("URL") ?>public/img/PX/T.png" 
+                                 src="<?= URL ?>public/img/PX/T.png" 
                                  alt="Presión Arterial" />
                             <div class="text-center mb-3 md:mb-4">
                                 <p class="text-zinc-700 text-sm md:text-base lg:text-lg font-bold">
@@ -133,7 +133,7 @@
                         <!-- Card 5: Frecuencia Respiratoria -->
                         <div class="bg-stone-300/30 rounded-lg p-4 md:p-6 flex flex-col items-center justify-between min-h-[300px] md:min-h-[350px]">
                             <img class="w-40 h-40 sm:w-44 sm:h-44 md:w-48 md:h-48 object-contain mb-3 md:mb-4" 
-                                 src="<?= constant("URL") ?>public/img/PX/C.png" 
+                                 src="<?= URL ?>public/img/PX/C.png" 
                                  alt="Frecuencia Respiratoria" />
                             <div class="text-center mb-3 md:mb-4">
                                 <p class="text-zinc-700 text-sm md:text-base lg:text-lg font-bold">
@@ -149,7 +149,7 @@
                         <!-- Card 6: Pulso -->
                         <div class="bg-stone-300/30 rounded-lg p-4 md:p-6 flex flex-col items-center justify-between min-h-[300px] md:min-h-[350px]">
                             <img class="w-36 h-36 sm:w-40 sm:h-40 md:w-44 md:h-44 object-contain mb-3 md:mb-4" 
-                                 src="<?= constant("URL") ?>public/img/PX/P.png" 
+                                 src="<?= URL ?>public/img/PX/P.png" 
                                  alt="Pulso" />
                             <div class="text-center mb-3 md:mb-4">
                                 <p class="text-zinc-700 text-sm md:text-base lg:text-lg font-bold">
@@ -264,26 +264,125 @@
                 };
 
                 const config = fieldConfigs[type] || [];
-                return config.map(field => `
+                let fields = '';
+
+                // Agregar campos visibles
+                config.forEach(field => {
+                    fields += `
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="${field.name}">
+                                ${field.label}
+                            </label>
+                            <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                   id="${field.name}" name="${field.name}" type="${field.type}" step="${field.step || ''}" placeholder="${field.placeholder}" required>
+                        </div>`;
+                });
+
+                // Agregar campo oculto para el tipo
+                fields += `
+                    <input type="hidden" name="tipo" value="${type}">`;
+
+                // Agregar campo de observaciones opcional
+                fields += `
                     <div class="mb-4">
-                        <label class="block text-gray-700 text-sm font-bold mb-2" for="${field.name}">
-                            ${field.label}
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="observaciones">
+                            Observaciones (opcional)
                         </label>
-                        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                               id="${field.name}" name="${field.name}" type="${field.type}" step="${field.step || ''}" placeholder="${field.placeholder}" required>
-                    </div>
-                `).join('');
+                        <textarea class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                  id="observaciones" name="observaciones" rows="3" placeholder="Agregue cualquier observación adicional..."></textarea>
+                    </div>`;
+
+                return fields;
             }
 
             // Manejar envío del formulario
             document.getElementById('vital-signs-form').addEventListener('submit', function(e) {
                 e.preventDefault();
 
-                // Aquí puedes agregar la lógica para guardar los datos
-                // Por ejemplo, hacer una petición AJAX al servidor
+                const formData = new FormData(this);
+                const tipo = formData.get('tipo') || document.querySelector('input[name="tipo"]')?.value;
+                const observaciones = formData.get('observaciones');
 
-                alert('Datos guardados correctamente!');
-                closeModal();
+                // Preparar datos según el tipo
+                let datos = {
+                    tipo: tipo,
+                    observaciones: observaciones
+                };
+
+                // Para presión arterial, necesitamos dos valores
+                if (tipo === 'presion') {
+                    datos.sistolica = formData.get('sistolica');
+                    datos.diastolica = formData.get('diastolica');
+                    datos.valor = formData.get('sistolica'); // Para compatibilidad
+                } else {
+                    datos.valor = formData.get(tipo);
+                }
+
+                // Validar que los campos requeridos no estén vacíos
+                if (tipo === 'presion') {
+                    if (!datos.sistolica || !datos.diastolica) {
+                        alert('Por favor complete todos los campos requeridos.');
+                        return;
+                    }
+                } else {
+                    if (!datos.valor) {
+                        alert('Por favor complete todos los campos requeridos.');
+                        return;
+                    }
+                }
+
+                // Mostrar loading
+                const submitBtn = this.querySelector('button[type="submit"]');
+                const originalText = submitBtn.textContent;
+                submitBtn.textContent = 'Guardando...';
+                submitBtn.disabled = true;
+
+                // Hacer petición AJAX
+                fetch('<?= URL ?>servicios/registrarPorTipo', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: new URLSearchParams(datos)
+                })
+                .then(response => {
+                    // Verificar si la respuesta es JSON
+                    const contentType = response.headers.get('content-type');
+                    if (contentType && contentType.indexOf('application/json') !== -1) {
+                        return response.json();
+                    } else {
+                        // Si no es JSON, probablemente es una redirección
+                        throw new Error('Respuesta no JSON - posible redirección de autenticación');
+                    }
+                })
+                .then(data => {
+                    // Restaurar botón
+                    submitBtn.textContent = originalText;
+                    submitBtn.disabled = false;
+
+                    if (data.status === 'success') {
+                        alert('¡' + data.message + '!');
+                        closeModal();
+                        // Opcional: recargar la página o actualizar alguna lista
+                        // location.reload();
+                    } else {
+                        alert('Error: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    // Restaurar botón
+                    submitBtn.textContent = originalText;
+                    submitBtn.disabled = false;
+
+                    console.error('Error:', error);
+                    if (error.message.includes('Respuesta no JSON')) {
+                        alert('Error de autenticación. Por favor, inicia sesión nuevamente.');
+                        window.location.href = '<?= URL ?>auth/login';
+                    } else {
+                        alert('Error de conexión. Por favor intente nuevamente.');
+                    }
+                });
             });
 
             // Cerrar modal al hacer clic fuera de él
