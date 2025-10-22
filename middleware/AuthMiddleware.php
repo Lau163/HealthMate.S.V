@@ -48,6 +48,10 @@ class AuthMiddleware {
             return true;
         }
 
+        // Verificar si es una petición AJAX
+        $isAjaxRequest = isset($_SERVER['HTTP_X_REQUESTED_WITH']) &&
+                        strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
+
         // Verificar si la ruta es pública
         $esRutaPublica = false;
         foreach ($this->rutasPublicas as $ruta) {
@@ -67,10 +71,17 @@ class AuthMiddleware {
         if (!isset($_SESSION['usuario_id'])) {
             // Reset redirect counter before redirecting
             $_SESSION['redirect_count'] = 0;
-            $_SESSION['redirect_url'] = $uri;
 
-            header('Location: ' . BASE_URL . 'auth/login');
-            exit;
+            if ($isAjaxRequest) {
+                // Para peticiones AJAX, devolver error JSON en lugar de redirigir
+                header('Content-Type: application/json');
+                echo json_encode(['status' => 'error', 'message' => 'Usuario no autenticado']);
+                exit;
+            } else {
+                $_SESSION['redirect_url'] = $uri;
+                header('Location: ' . BASE_URL . 'auth/login');
+                exit;
+            }
         }
 
         // Verificar si la sesión ha expirado
@@ -81,9 +92,16 @@ class AuthMiddleware {
             session_unset();
             session_destroy();
 
-            $_SESSION['error'] = 'Tu sesión ha expirado por inactividad. Por favor, inicia sesión nuevamente.';
-            header('Location: ' . BASE_URL . 'auth/login');
-            exit;
+            if ($isAjaxRequest) {
+                // Para peticiones AJAX, devolver error JSON
+                header('Content-Type: application/json');
+                echo json_encode(['status' => 'error', 'message' => 'Sesión expirada']);
+                exit;
+            } else {
+                $_SESSION['error'] = 'Tu sesión ha expirado por inactividad. Por favor, inicia sesión nuevamente.';
+                header('Location: ' . BASE_URL . 'auth/login');
+                exit;
+            }
         }
 
         // Actualizar el tiempo de último acceso y reset counter

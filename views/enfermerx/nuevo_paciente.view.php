@@ -46,7 +46,9 @@ if (!isset($_SESSION['usuario_id'])) {
                     </div>
                 <?php endif; ?>
 
-                <form action="<?= BASE_URL ?>enfermerx/registrar-paciente" method="POST" class="space-y-6">
+                <form action="<?= BASE_URL ?>enfermerx/guardarPaciente" method="POST" class="space-y-6" enctype="multipart/form-data" id="form-paciente">
+                    <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?? '' ?>">
+                    
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <!-- Datos Personales -->
                         <div class="space-y-4">
@@ -55,38 +57,35 @@ if (!isset($_SESSION['usuario_id'])) {
                             </h3>
                             
                             <div>
-                                <label for="nombres" class="block text-sm font-medium text-gray-700">Nombres *</label>
-                                <input type="text" id="nombres" name="nombres" required
+                                <label for="nombre" class="block text-sm font-medium text-gray-700">Nombre Completo *</label>
+                                <input type="text" id="nombre" name="nombre" required
                                     class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500">
+                                <p id="nombre-error" class="mt-1 text-sm text-red-600 hidden">Por favor ingrese el nombre completo</p>
                             </div>
 
                             <div>
-                                <label for="apellidos" class="block text-sm font-medium text-gray-700">Apellidos *</label>
-                                <input type="text" id="apellidos" name="apellidos" required
+                                <label for="edad" class="block text-sm font-medium text-gray-700">Edad *</label>
+                                <input type="number" id="edad" name="edad" min="0" max="120" required
                                     class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500">
+                                <p id="edad-error" class="mt-1 text-sm text-red-600 hidden">Por favor ingrese una edad válida (0-120)</p>
                             </div>
 
                             <div>
-                                <label for="fecha_nacimiento" class="block text-sm font-medium text-gray-700">Fecha de Nacimiento</label>
-                                <input type="date" id="fecha_nacimiento" name="fecha_nacimiento"
-                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500">
-                            </div>
-
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700">Género</label>
-                                <div class="mt-1 space-x-4">
+                                <label class="block text-sm font-medium text-gray-700">Género *</label>
+                                <div class="mt-1 space-x-4" id="genero-container">
                                     <label class="inline-flex items-center">
-                                        <input type="radio" name="genero" value="M" class="text-teal-600 focus:ring-teal-500">
+                                        <input type="radio" name="genero" value="M" class="text-teal-600 focus:ring-teal-500" required>
                                         <span class="ml-2">Masculino</span>
                                     </label>
                                     <label class="inline-flex items-center">
-                                        <input type="radio" name="genero" value="F" class="text-teal-600 focus:ring-teal-500">
+                                        <input type="radio" name="genero" value="F" class="text-teal-600 focus:ring-teal-500" required>
                                         <span class="ml-2">Femenino</span>
                                     </label>
                                     <label class="inline-flex items-center">
-                                        <input type="radio" name="genero" value="O" class="text-teal-600 focus:ring-teal-500">
+                                        <input type="radio" name="genero" value="O" class="text-teal-600 focus:ring-teal-500" required>
                                         <span class="ml-2">Otro</span>
                                     </label>
+                                    <p id="genero-error" class="mt-1 text-sm text-red-600 hidden">Por favor seleccione un género</p>
                                 </div>
                             </div>
                         </div>
@@ -98,14 +97,15 @@ if (!isset($_SESSION['usuario_id'])) {
                             </h3>
                             
                             <div>
-                                <label for="telefono" class="block text-sm font-medium text-gray-700">Teléfono</label>
-                                <input type="tel" id="telefono" name="telefono"
+                                <label for="email" class="block text-sm font-medium text-gray-700">Correo Electrónico *</label>
+                                <input type="email" id="email" name="email" required
                                     class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500">
+                                <p id="email-error" class="mt-1 text-sm text-red-600 hidden">Por favor ingrese un correo electrónico válido</p>
                             </div>
 
                             <div>
-                                <label for="email" class="block text-sm font-medium text-gray-700">Correo Electrónico</label>
-                                <input type="email" id="email" name="email"
+                                <label for="telefono" class="block text-sm font-medium text-gray-700">Teléfono</label>
+                                <input type="tel" id="telefono" name="telefono"
                                     class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500">
                             </div>
 
@@ -148,27 +148,59 @@ if (!isset($_SESSION['usuario_id'])) {
                         </div>
 
                         <div>
-                            <label for="enfermedades_cronicas" class="block text-sm font-medium text-gray-700">Enfermedades Crónicas</label>
-                            <textarea id="enfermedades_cronicas" name="enfermedades_cronicas" rows="2"
+                            <label for="enfermedades" class="block text-sm font-medium text-gray-700">Enfermedades Crónicas</label>
+                            <textarea id="enfermedades" name="enfermedades" rows="2"
                                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500"
                                 placeholder="Ej: Diabetes, Hipertensión..."></textarea>
                         </div>
 
                         <div>
-                            <label for="medicamentos" class="block text-sm font-medium text-gray-700">Medicamentos Actuales</label>
+                            <label for="medicamentos" class="block text-sm font-medium text-gray-700">Medicamentos</label>
                             <textarea id="medicamentos" name="medicamentos" rows="2"
                                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500"
-                                placeholder="Lista de medicamentos y dosis..."></textarea>
+                                placeholder="Ej: Aspirina, Metformina..."></textarea>
+                        </div>
+
+                        <div>
+                            <label for="peso" class="block text-sm font-medium text-gray-700">Peso (kg)</label>
+                            <input type="number" id="peso" name="peso" min="0" max="500" step="0.1"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500"
+                                placeholder="70.5">
+                        </div>
+
+                        <div>
+                            <label for="altura" class="block text-sm font-medium text-gray-700">Altura (cm)</label>
+                            <input type="number" id="altura" name="altura" min="0" max="300"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500"
+                                placeholder="175">
                         </div>
                     </div>
 
-                    <!-- Botones de acción -->
-                    <div class="flex justify-end space-x-4 pt-6 border-t">
+                    <!-- Documentos -->
+                    <div class="space-y-4">
+                        <h3 class="text-lg font-semibold text-gray-700 border-b pb-2">
+                            <i class="fas fa-file-alt text-teal-600 mr-2"></i>Documentos
+                        </h3>
+                        
+                        <div>
+                            <label for="documentos" class="block text-sm font-medium text-gray-700">Subir Documentos</label>
+                            <input type="file" id="documentos" name="documentos[]" multiple
+                                class="mt-1 block w-full text-sm text-gray-500
+                                file:mr-4 file:py-2 file:px-4
+                                file:rounded-md file:border-0
+                                file:text-sm file:font-semibold
+                                file:bg-teal-50 file:text-teal-700
+                                hover:file:bg-teal-100">
+                            <p class="mt-1 text-xs text-gray-500">Puedes seleccionar múltiples archivos (PDF, JPG, PNG)</p>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end space-x-4 pt-4 border-t">
                         <a href="<?= BASE_URL ?>enfermerx" class="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500">
-                            <i class="fas fa-times mr-1"></i> Cancelar
+                            Cancelar
                         </a>
-                        <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500">
-                            <i class="fas fa-save mr-1"></i> Guardar Paciente
+                        <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500">
+                            <i class="fas fa-save mr-2"></i> Guardar Paciente
                         </button>
                     </div>
                 </form>
@@ -178,9 +210,71 @@ if (!isset($_SESSION['usuario_id'])) {
         <!-- Pie de página -->
         <footer class="bg-gray-800 text-white p-4 mt-8">
             <div class="container mx-auto text-center">
-                <p>&copy; <?= date('Y') ?> HealthMate - Todos los derechos reservados</p>
+                <p>&copy; <?= date('Y') ?> HealthMate. Todos los derechos reservados.</p>
             </div>
         </footer>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('form-paciente');
+            const submitBtn = form.querySelector('button[type="submit"]');
+
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                // Crear FormData para enviar archivos
+                const formData = new FormData(form);
+
+                // Deshabilitar botón y mostrar loading
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> Guardando...';
+
+                fetch(form.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Mostrar mensaje de éxito
+                        showMessage('Paciente registrado exitosamente', 'success');
+                        setTimeout(() => {
+                            window.location.href = '<?= BASE_URL ?>enfermerx';
+                        }, 2000);
+                    } else {
+                        showMessage(data.message || 'Error al guardar el paciente', 'error');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showMessage('Error de conexión. Inténtalo de nuevo.', 'error');
+                })
+                .finally(() => {
+                    // Rehabilitar botón
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<i class="fas fa-save mr-1"></i> Guardar Paciente';
+                });
+            });
+
+            function showMessage(message, type) {
+                // Remover mensajes anteriores
+                const existingMessages = document.querySelectorAll('.alert-message');
+                existingMessages.forEach(msg => msg.remove());
+
+                // Crear nuevo mensaje
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `alert-message ${type === 'success' ? 'bg-green-100 border-green-500 text-green-700' : 'bg-red-100 border-red-500 text-red-700'} border-l-4 p-4 mb-4`;
+                messageDiv.innerHTML = `<p>${message}</p>`;
+
+                // Insertar después del título
+                const title = document.querySelector('h2');
+                title.parentNode.insertBefore(messageDiv, title.nextSibling);
+            }
+        });
+    </script>
 </body>
 </html>
