@@ -71,6 +71,16 @@ class AuthMiddleware {
             return true;
         }
 
+        // Modo debug: permitir acceso si hay parámetro debug en la URL
+        if (isset($_GET['debug']) && $_GET['debug'] === '1') {
+            // Simular sesión de usuario para testing
+            $_SESSION['usuario_id'] = 1;
+            $_SESSION['usuario_nombre'] = 'Usuario de Prueba';
+            $_SESSION['usuario_email'] = 'test@healthmate.com';
+            $_SESSION['redirect_count'] = 0;
+            $_SESSION['ultimo_acceso'] = time();
+        }
+
         // Verificar si el usuario está autenticado
         if (!isset($_SESSION['usuario_id'])) {
             // Reset redirect counter before redirecting

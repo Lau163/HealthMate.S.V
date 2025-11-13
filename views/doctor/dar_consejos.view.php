@@ -3,15 +3,15 @@
 $title = 'Dar Consejos - HealthMate';
 $pageTitle = 'DAR CONSEJOS';
 
-// Obtener categorías disponibles
-$categorias = $this->get('categorias') ?? [
+// Obtener categorías disponibles (ya configuradas por el controlador)
+$categorias = $categorias ?? [
     'Alimentación', 'Actividad Física', 'Bienestar Mental',
     'Prevención Médica', 'Hidratación', 'Sueño y Descanso'
 ];
 
 // Obtener datos del formulario si existe
-$formData = $this->get('formData') ?? [];
-$errors = $this->get('errors') ?? [];
+$formData = $formData ?? [];
+$errors = $errors ?? [];
 ?>
 
 <!-- Dar Consejos Content -->
@@ -52,7 +52,7 @@ $errors = $this->get('errors') ?? [];
             </div>
         <?php endif; ?>
 
-        <form action="<?php echo BASE_URL; ?>doctor/consejos/guardar" method="POST" enctype="multipart/form-data" class="space-y-6">
+        <form action="<?php echo BASE_URL; ?>doctor/dar_consejos" method="POST" enctype="multipart/form-data" class="space-y-6">
             <!-- Título -->
             <div>
                 <label for="titulo" class="block text-sm font-medium text-gray-700 mb-2">
@@ -122,14 +122,6 @@ $errors = $this->get('errors') ?? [];
                            accept="image/*"
                            class="hidden">
                 </div>
-                <?php if (!empty($formData['imagen_actual'])): ?>
-                    <div class="mt-4">
-                        <p class="text-sm text-gray-600 mb-2">Imagen actual:</p>
-                        <img src="<?php echo htmlspecialchars($formData['imagen_actual']); ?>"
-                             alt="Imagen actual"
-                             class="w-32 h-32 object-cover rounded-lg border border-gray-200">
-                    </div>
-                <?php endif; ?>
             </div>
 
             <!-- Opciones adicionales -->
@@ -261,48 +253,3 @@ $errors = $this->get('errors') ?? [];
         </div>
     </div>
 </div>
-
-<script>
-// Funcionalidad para el drag and drop de imágenes
-document.addEventListener('DOMContentLoaded', function() {
-    const dropZone = document.querySelector('.border-dashed');
-    const fileInput = document.getElementById('imagen');
-
-    if (dropZone && fileInput) {
-        // Drag and drop events
-        dropZone.addEventListener('dragover', function(e) {
-            e.preventDefault();
-            dropZone.classList.add('border-blue-400', 'bg-blue-50');
-        });
-
-        dropZone.addEventListener('dragleave', function(e) {
-            e.preventDefault();
-            dropZone.classList.remove('border-blue-400', 'bg-blue-50');
-        });
-
-        dropZone.addEventListener('drop', function(e) {
-            e.preventDefault();
-            dropZone.classList.remove('border-blue-400', 'bg-blue-50');
-
-            const files = e.dataTransfer.files;
-            if (files.length > 0) {
-                fileInput.files = files;
-                // Aquí podrías mostrar una preview de la imagen
-            }
-        });
-
-        // Click to upload
-        dropZone.addEventListener('click', function() {
-            fileInput.click();
-        });
-
-        // File input change
-        fileInput.addEventListener('change', function() {
-            if (fileInput.files.length > 0) {
-                // Aquí podrías mostrar una preview de la imagen seleccionada
-                console.log('Archivo seleccionado:', fileInput.files[0].name);
-            }
-        });
-    }
-});
-</script>

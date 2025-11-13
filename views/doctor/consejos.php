@@ -4,7 +4,7 @@ $title = 'Consejos Médicos - HealthMate';
 $pageTitle = 'CONSEJOS MÉDICOS';
 
 // Obtener consejos médicos
-$consejos = $this->get('consejos') ?? [
+$consejos = $consejos ?? [
     [
         'id' => 1,
         'titulo' => 'Importancia de la Hidratación',
@@ -34,8 +34,8 @@ $consejos = $this->get('consejos') ?? [
     ]
 ];
 
-$categorias = $this->get('categorias') ?? ['Alimentación', 'Actividad Física', 'Bienestar Mental', 'Prevención Médica', 'Hidratación', 'Sueño y Descanso'];
-$consejoActual = $this->get('consejoActual') ?? 0;
+$categorias = $categorias ?? ['Alimentación', 'Actividad Física', 'Bienestar Mental', 'Prevención Médica', 'Hidratación', 'Sueño y Descanso'];
+$consejoActual = $consejoActual ?? 0;
 ?>
 
 <!-- Consejos Médicos Content -->

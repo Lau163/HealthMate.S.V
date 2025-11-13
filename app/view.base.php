@@ -28,6 +28,11 @@ class ViewBase{
   function get($key, $default = null){
     return array_key_exists($key, $this->data) ? $this->data[$key] : $default;
   }
+
+  // Obtener todas las variables asignadas
+  function getData(){
+    return $this->data;
+  }
 }
 
  ?>
