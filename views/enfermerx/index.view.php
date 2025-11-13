@@ -809,14 +809,15 @@
                     });
                     
                     // Usar FormData directamente en lugar de convertir a JSON
-                    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
+                    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content || document.querySelector('input[name="csrf_token"]')?.value;
                     
                     // Crear un nuevo FormData para asegurar que los datos se envíen correctamente
                     const formDataToSend = new FormData();
                     formDataToSend.append('nombre', formObject.nombre || '');
                     formDataToSend.append('email', formObject.email || '');
                     formDataToSend.append('edad', formObject.edad || '');
-                    formDataToSend.append('genero', formObject.genero || '');
+                    // El backend espera 'genero'; el formulario usa 'sexo'
+                    formDataToSend.append('genero', formObject.sexo || formObject.genero || '');
                     formDataToSend.append('peso', formObject.peso || '');
                     formDataToSend.append('altura', formObject.altura || '');
                     formDataToSend.append('tipo_sangre', formObject.tipo_sangre || '');

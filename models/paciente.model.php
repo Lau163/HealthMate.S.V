@@ -103,17 +103,17 @@ class PacienteModel extends ModelBase
 
         // Mapear entradas comunes de formularios a columnas de usuarios
         $nombres = trim(($datos['nombres'] ?? '') . ' ' . ($datos['apellidos'] ?? ''));
-        $nombre = $datos['Nombre'] ?? ($nombres ?: null);
+        $nombre = $datos['Nombre'] ?? ($datos['nombre'] ?? ($nombres ?: null));
         $email = $datos['Email'] ?? ($datos['email'] ?? null);
         $sexo = $datos['Sexo'] ?? ($datos['genero'] ?? null);
-        $peso = $datos['Peso'] ?? null;
-        $altura = $datos['Altura'] ?? null;
+        $peso = $datos['Peso'] ?? ($datos['peso'] ?? null);
+        $altura = $datos['Altura'] ?? ($datos['altura'] ?? null);
         $tipoSangre = $datos['Tipo_sangre'] ?? ($datos['tipo_sangre'] ?? null);
         $alergias = $datos['Alergias'] ?? ($datos['alergias'] ?? null);
         $enfermedades = $datos['Enfermedades'] ?? ($datos['enfermedades'] ?? ($datos['enfermedades_cronicas'] ?? null));
 
         // Calcular edad si se proporciona fecha_nacimiento
-        $edad = $datos['Edad'] ?? null;
+        $edad = $datos['Edad'] ?? ($datos['edad'] ?? null);
         if (!$edad && !empty($datos['fecha_nacimiento'])) {
             try {
                 $fn = new DateTime($datos['fecha_nacimiento']);
