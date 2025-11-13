@@ -7,6 +7,10 @@ class AuthMiddleware {
         'auth/forgot-password',
         'auth/reset-password',
         'index/sessionCleaner',
+        'servicios/registrarPorTipo', // Para peticiones AJAX de servicios
+        'servicios/getHistorial',
+        'servicios/getEstadisticas',
+        'servicios', // Vista de servicios
         '' // Página de inicio
     ];
 
@@ -82,10 +86,15 @@ class AuthMiddleware {
                 header('Location: ' . BASE_URL . 'auth/login');
                 exit;
             }
+        } else {
+            // DEBUG: Usuario autenticado, mostrar información de la sesión
+            error_log("DEBUG AuthMiddleware: Usuario autenticado - ID: " . $_SESSION['usuario_id']);
+            error_log("DEBUG AuthMiddleware: URI: $uri");
+            error_log("DEBUG AuthMiddleware: Is AJAX: " . ($isAjaxRequest ? 'Sí' : 'No'));
         }
 
-        // Verificar si la sesión ha expirado
-        $tiempoInactividad = 1800; // 30 minutos de inactividad
+        // Verificar si la sesión ha expirado (reducir tiempo para testing)
+        $tiempoInactividad = 3600; // 1 hora para testing (antes 30 minutos)
         if (isset($_SESSION['ultimo_acceso']) && (time() - $_SESSION['ultimo_acceso'] > $tiempoInactividad)) {
             //Destruir la sesión y reset counter
             $_SESSION['redirect_count'] = 0;
@@ -102,12 +111,9 @@ class AuthMiddleware {
                 header('Location: ' . BASE_URL . 'auth/login');
                 exit;
             }
+        } else {
+            // Si no ha expirado, actualizar el tiempo de último acceso
+            $_SESSION['ultimo_acceso'] = time();
         }
-
-        // Actualizar el tiempo de último acceso y reset counter
-        $_SESSION['ultimo_acceso'] = time();
-        $_SESSION['redirect_count'] = 0;
-
-        return true;
     }
 }
