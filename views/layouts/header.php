@@ -24,6 +24,18 @@
     </style>
 </head>
 <body>
+    <script>
+    (function(){
+        function needsReload(evt){
+            try {
+                var nav = (performance && performance.getEntriesByType) ? performance.getEntriesByType('navigation')[0] : null;
+                var isBFCache = (evt && evt.persisted) || (nav && nav.type === 'back_forward');
+                if (isBFCache) { window.location.reload(); }
+            } catch (_) { /* noop */ }
+        }
+        window.addEventListener('pageshow', needsReload);
+    })();
+    </script>
     <!-- Barra de navegación -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
         <div class="container">

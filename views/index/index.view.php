@@ -86,6 +86,10 @@
     <?php if (isset($error)): ?>
     <div class="alert alert-danger"><?= htmlspecialchars($error) ?></div>
     <?php endif; ?>
+    <?php if (isset($_SESSION['success'])): ?>
+    <div class="alert alert-success"><?= htmlspecialchars($_SESSION['success']) ?></div>
+    <?php unset($_SESSION['success']); ?>
+    <?php endif; ?>
 
     <!-- Login Form -->
 

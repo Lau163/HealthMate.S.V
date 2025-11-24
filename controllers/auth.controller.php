@@ -36,6 +36,13 @@ class Auth extends ControllerBase {
                 break;
             }
         }
+        if (empty($error) && isset($_SESSION['error'])) {
+            $error = $_SESSION['error'];
+            unset($_SESSION['error']);
+        }
+        if (empty($error) && isset($_GET['logout'])) {
+            $error = 'Tienes que iniciar sesión nuevamente.';
+        }
         
         // Pasar el error a la vista
         $this->view->set('error', $error);
@@ -388,35 +395,14 @@ class Auth extends ControllerBase {
         } else {
             error_log('Error al destruir la sesión para el usuario: ' . $usuarioId);
         }
-        
-        // Redirigir a la página de inicio con un parámetro para forzar recarga
-        // Usar JavaScript para forzar la recarga de la caché
-        $redirectUrl = BASE_URL . '?logout=' . time();
-        
-        // Enviar encabezados adicionales
-        header('X-Frame-Options: DENY');
-        header('X-Content-Type-Options: nosniff');
-        
-        // Redirigir con JavaScript para asegurar que no se use la caché
-        echo '<!DOCTYPE html>
-        <html>
-        <head>
-            <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-            <meta http-equiv="Pragma" content="no-cache" />
-            <meta http-equiv="Expires" content="0" />
-            <script>
-                // Forzar recarga sin caché
-                window.location.replace("' . htmlspecialchars($redirectUrl, ENT_QUOTES, 'UTF-8') . '");
-                // Limpiar el historial de navegación
-                if (window.history) {
-                    window.history.replaceState(null, null, "' . htmlspecialchars($redirectUrl, ENT_QUOTES, 'UTF-8') . '");
-                }
-            </script>
-        </head>
-        <body>
-            <p>Cerrando sesión... <a href="' . htmlspecialchars($redirectUrl, ENT_QUOTES, 'UTF-8') . '">Continuar</a></p>
-        </body>
-        </html>';
+        // Cerrar manejadores y reiniciar una sesión nueva para poder setear el mensaje
+        if (function_exists('session_write_close')) {
+            @session_write_close();
+        }
+        @session_start();
+        $_SESSION['success'] = 'Sesión cerrada correctamente.';
+        // Redirigir al inicio del sitio
+        header('Location: ' . BASE_URL);
         exit;
     }
 }

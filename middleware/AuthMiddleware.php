@@ -2,16 +2,19 @@
 
 class AuthMiddleware {
     private $rutasPublicas = [
+        '', // Página de inicio (root)
+        'index',
+        'index/index',
+        'auth',
         'auth/login',
         'auth/register',
         'auth/forgot-password',
         'auth/reset-password',
-        'index/sessionCleaner',
+        'index/sessionCleaner', // Para peticiones AJAX de servicios
         'servicios/registrarPorTipo', // Para peticiones AJAX de servicios
         'servicios/getHistorial',
         'servicios/getEstadisticas',
-        'servicios', // Vista de servicios
-        '' // Página de inicio
+        'servicios' // Vista de servicios
     ];
 
     public function handle() {
@@ -23,6 +26,24 @@ class AuthMiddleware {
         // Iniciar sesión si no está iniciada
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
+        }
+        // Si viene un indicador de logout en la URL, asegurar limpieza y redirección al login
+        if (isset($_GET['logout'])) {
+            // No-cache headers
+            header_remove('Pragma');
+            header_remove('Expires');
+            header_remove('Cache-Control');
+            header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0, post-check=0, pre-check=0');
+            header('Pragma: no-cache');
+            header('Expires: Thu, 19 Nov 1981 08:52:00 GMT');
+
+            session_unset();
+            session_destroy();
+            // Reiniciar sesión para poder setear el mensaje
+            session_start();
+            $_SESSION['error'] = 'Tienes que iniciar sesión nuevamente.';
+            header('Location: ' . BASE_URL . 'auth/login');
+            exit;
         }
         // Generar token CSRF si no existe
         if (empty($_SESSION['csrf_token'])) {
@@ -98,9 +119,10 @@ class AuthMiddleware {
             if ($isAjaxRequest) {
                 // Para peticiones AJAX, devolver error JSON en lugar de redirigir
                 header('Content-Type: application/json');
-                echo json_encode(['status' => 'error', 'message' => 'Usuario no autenticado']);
+                echo json_encode(['status' => 'error', 'message' => 'Tienes que iniciar sesión nuevamente.']);
                 exit;
             } else {
+                $_SESSION['error'] = 'Tienes que iniciar sesión nuevamente.';
                 $_SESSION['redirect_url'] = $uri;
                 header('Location: ' . BASE_URL . 'auth/login');
                 exit;
@@ -133,6 +155,12 @@ class AuthMiddleware {
         } else {
             // Si no ha expirado, actualizar el tiempo de último acceso
             $_SESSION['ultimo_acceso'] = time();
+            header_remove('Pragma');
+            header_remove('Expires');
+            header_remove('Cache-Control');
+            header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0, post-check=0, pre-check=0');
+            header('Pragma: no-cache');
+            header('Expires: Thu, 19 Nov 1981 08:52:00 GMT');
         }
     }
 }
