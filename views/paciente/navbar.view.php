@@ -122,7 +122,7 @@
             // Crear un formulario temporal para enviar datos POST si es necesario
             const form = document.createElement('form');
             form.method = 'POST';
-            form.action = '<?= constant("URL") ?>login/logout';
+            form.action = '<?= BASE_URL ?>auth/logout';
             document.body.appendChild(form);
             form.submit();
         }
