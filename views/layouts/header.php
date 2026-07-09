@@ -49,6 +49,15 @@
             </button>
             
             <div class="collapse navbar-collapse" id="navbarNav">
+                <?php if (isset($_SESSION['usuario_id'])): ?>
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="<?php echo BASE_URL; ?>ai">
+                                <i class="fas fa-robot me-1"></i> Asistente Vitali
+                            </a>
+                        </li>
+                    </ul>
+                <?php endif; ?>
                 <!-- Menú de usuario -->
                 <?php if (isset($_SESSION['usuario_id'])): ?>
                     <ul class="navbar-nav ms-auto">

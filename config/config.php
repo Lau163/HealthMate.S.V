@@ -6,6 +6,12 @@ define("USER", "root");//Usuario de la base de datos
 define("PASSWORD", "");//Contraseña de usuario de la base de datos
 define("CHARSET", "utf8");//Codificación de caracteres.
 
+// Configuración de la API de Inteligencia Artificial (Asistente Vitali)
+define("AI_API_KEY", ""); // Coloca tu OpenAI o Gemini API Key aquí
+define("AI_PROVIDER", "openai"); // Puedes usar 'openai' o 'gemini'
+define("AI_MODEL", "gpt-4o-mini"); // Modelo a usar (p. ej. 'gpt-4o-mini' para OpenAI, 'gemini-1.5-flash' para Gemini)
+
+
 // Configuración de la aplicación
 define("BASE_URL", "/" . basename(dirname(__DIR__)) . "/"); // Ruta base de la aplicación
 define("URL", "http://" . $_SERVER['HTTP_HOST'] . "/" . basename(dirname(__DIR__)) . "/"); // URL completa

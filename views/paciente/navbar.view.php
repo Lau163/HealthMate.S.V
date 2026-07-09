@@ -45,6 +45,10 @@
                    class="text-black hover:text-teal-700 text-lg font-normal font-['Baloo_Chettan'] transition-colors">
                     Perfil
                 </a>
+                <a href="<?= constant("URL") ?>ai" 
+                   class="text-teal-700 hover:text-teal-800 text-lg font-bold font-['Baloo_Chettan'] transition-colors">
+                    <i class="fas fa-robot mr-1"></i> Vitali IA
+                </a>
                 <!-- Botón de Cerrar Sesión -->
                 <a href="#" onclick="confirmarLogout()"
                    class="bg-red-600 hover:bg-red-700 text-white text-lg font-bold font-['Baloo_Chettan'] px-4 py-2 rounded-lg transition-colors shadow-md">
@@ -97,6 +101,10 @@
                 <a href="<?= constant("URL") ?>paciente/Perfil" 
                    class="text-black hover:text-teal-700 text-base font-normal font-['Baloo_Chettan'] py-2 border-b border-gray-200">
                     Perfil
+                </a>
+                <a href="<?= constant("URL") ?>ai" 
+                   class="text-teal-700 hover:text-teal-800 text-base font-bold font-['Baloo_Chettan'] py-2 border-b border-gray-200">
+                    <i class="fas fa-robot mr-1"></i> Vitali IA
                 </a>
                 <!-- Botón de Cerrar Sesión - Móvil -->
                 <a href="#" onclick="confirmarLogout()"
